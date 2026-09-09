@@ -1,16 +1,6 @@
 # Base de Conhecimento — Engenharia de Software
 
-> Extraída exclusivamente dos PDFs fornecidos nesta conversa.  
-> Objetivo: servir como contexto compacto para agentes de IA, RAG, revisão de atividades e geração de respostas baseadas no material da disciplina.  
-> Escopo: conteúdo conceitual e operacional relevante; exemplos repetitivos, imagens decorativas, referências bibliográficas extensas e detalhes de ferramenta pouco centrais foram comprimidos.
-
-## Convenções para agentes
-
-- **Fato do material**: trate os itens abaixo como a fonte primária desta base.
-- **Não extrapolar**: quando uma pergunta exigir detalhe não contido aqui, consultar os PDFs originais.
 - **Processos são contextuais**: os próprios materiais rejeitam a ideia de uma “receita de bolo” universal.
-- **Termos em inglês** permanecem quando são os nomes usados pelos slides (build, release, deploy, backlog, sprint, mock etc.).
-- `source_refs` indica o PDF e as páginas de origem.
 
 ---
 
