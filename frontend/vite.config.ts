@@ -4,4 +4,13 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://localhost:3000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
