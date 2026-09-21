@@ -9,41 +9,30 @@ describe('Authentication System - Login', () => {
       passwordPlain: 'password123'
     };
 
-    const resultado = await loginUser(credenciais);
+    const result = await loginUser(credenciais);
     
-    // O Vitest vai "esperar" (expect) que a validação falhe corretamente
-    expect(resultado.success).toBe(false);
-    expect(resultado.message).toBe('User not found');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('User not found');
   });
 
   it('Must fail when using the wrong password', async () => {
-    // 1. Criamos um usuário real para o teste
-    await registerUser({
-      name: 'Test User',
-      email: 'test@unicamp.br',
-      institution: 'IC',
-      age: 20,
-      gender: 'other',
-      passwordPlain: 'password123'
-    });
-
-    // 2. Tentamos logar com a senha errada
-    const resultado = await loginUser({
+    // Already registred user for testing
+    const result = await loginUser({
       name_email: 'test@unicamp.br',
       passwordPlain: 'password456'
     });
 
-    expect(resultado.success).toBe(false);
-    expect(resultado.message).toBe('Invalid password');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Invalid password');
   });
 
   it('Must login with correct credentials', async () => {
-    const resultado = await loginUser({
+    const result = await loginUser({
       name_email: 'test@unicamp.br',
       passwordPlain: 'password123'
     });
 
-    expect(resultado.success).toBe(true);
-    expect(resultado.message).toBe('User logged in successfully');
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('User logged in successfully');
   });
 });

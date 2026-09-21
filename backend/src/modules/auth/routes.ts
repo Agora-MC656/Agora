@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import { handleRegister, handleLogin } from './controller.js';
+import { UserRegistration } from './types.js';
 
 const router = Router();
 
@@ -14,7 +15,11 @@ const limiter = rateLimit({
 });
 
 //
-const validateRegistrationData = (req: Request, res: Response, next: NextFunction ) => {
+const validateRegistrationData = (
+    req: Request<Record<string, never>, unknown, UserRegistration>,
+    res: Response,
+    next: NextFunction,
+) => {
     const { name, email, institution, age, gender, passwordPlain } = req.body;
 
     if (!name || !email || !institution || !age || !gender || !passwordPlain) {

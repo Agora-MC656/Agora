@@ -6,11 +6,28 @@ import { UserRegistration, LoginCredentials, UserSaved } from './types.js';
 // Path to the JSON file that will act as a simple database
 const DB_FILE_PATH = path.resolve('users.json'); 
 
+const isUserSavedArray = (value: unknown): value is UserSaved[] => {
+  return Array.isArray(value) && value.every((user) => {
+    if (typeof user !== 'object' || user === null) {
+      return false;
+    }
+
+    const savedUser = user as Record<string, unknown>;
+    return typeof savedUser.name === 'string'
+      && typeof savedUser.email === 'string'
+      && typeof savedUser.institution === 'string'
+      && typeof savedUser.age === 'number'
+      && typeof savedUser.gender === 'string'
+      && typeof savedUser.passwordHash === 'string';
+  });
+};
+
 // Auxiliary function to read users from the JSON file
 const readUsersFromFile = async (): Promise<UserSaved[]> => {
   try {
     const data = await fs.readFile(DB_FILE_PATH, 'utf-8');
-    return JSON.parse(data);
+    const parsedData: unknown = JSON.parse(data);
+    return isUserSavedArray(parsedData) ? parsedData : [];
   } catch (error) {
     console.error('Error reading users from file:', error);
     return [];
