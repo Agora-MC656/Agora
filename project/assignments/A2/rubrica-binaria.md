@@ -77,8 +77,8 @@
 
 | ID | Verificação binária | Evidência esperada | PASS |
 |---|---|---|---|
-| C4.1 | O projeto usa ferramenta adequada de lint, análise estática ou qualidade. | Ferramenta compatível com a tecnologia adotada. | - [ ] PASS |
-| C4.2 | A configuração da ferramenta está versionada. | Arquivo de configuração no repositório. | - [ ] PASS |
+| C4.1 | O projeto usa ferramenta adequada de lint, análise estática ou qualidade. | Ferramenta compatível com a tecnologia adotada. | - [x] PASS |
+| C4.2 | A configuração da ferramenta está versionada. | Arquivo de configuração no repositório. | - [x] PASS |
 | C4.3 | A análise é executada automaticamente. | Etapa correspondente no pipeline. | - [ ] PASS |
 | C4.4 | Existem violações de qualidade previamente definidas pela equipe. | Regras ou configuração explícita da ferramenta. | - [ ] PASS |
 | C4.5 | Violações configuradas como impeditivas fazem a verificação falhar. | Execução com erro bloqueante ou configuração equivalente. | - [ ] PASS |

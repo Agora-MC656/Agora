@@ -10,10 +10,11 @@
     "dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write backend frontend package.json README.md eslint.config.mjs",
-    "format:check": "prettier --check backend frontend package.json README.md eslint.config.mjs"
+    "format": "prettier --write .github backend frontend package.json README.md eslint.config.mjs",
+    "format:check": "prettier --check .github backend frontend package.json README.md eslint.config.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
