@@ -71,7 +71,7 @@ Módulo responsável pela integração e fornecimento de dados da API do Gorilla
 
 ### Endpoints Disponíveis:
 
-* `POST /api/gorilla/fetch`: Dispara uma nova busca na API externa do Gorilla (POST inicial + polling GET), persiste o resultado no arquivo local `backend/data/gorilla-sample.json` e retorna os dados atualizados. Opcionalmente aceita um corpo JSON `{ "query": "termo de busca" }`.
+* `POST /api/gorilla/fetch`: Dispara uma nova busca na API externa do Gorilla (POST inicial + polling GET), persiste o resultado no arquivo local `backend/src/modules/gorilla/fixtures/gorilla-sample.json` e retorna os dados atualizados. Aceita `query` via query parameter na URL ou no corpo JSON.
 * `GET /api/gorilla`: Retorna instantaneamente os dados já armazenados no arquivo local sem consumir créditos da API.
 
 ### Como rodar os testes do módulo:
