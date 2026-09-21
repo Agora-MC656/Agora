@@ -28,18 +28,18 @@
 
 | ID | Verificação binária | Evidência esperada | PASS |
 |---|---|---|---|
-| C1.1 | O professor `cafeo-unicamp` foi adicionado como colaborador. | Configuração de acesso do repositório. | - [ ] PASS |
-| C1.2 | O PED `Andre-Satorres` foi adicionado como colaborador. | Configuração de acesso do repositório. | - [ ] PASS |
-| C1.3 | A branch `main` está protegida por Ruleset ou mecanismo equivalente. | Configuração visível da proteção. | - [ ] PASS |
-| C1.4 | A branch `develop` está protegida por Ruleset ou mecanismo equivalente. | Configuração visível da proteção. | - [ ] PASS |
-| C1.5 | A integração em branches protegidas exige Pull Request. | Regra ativa e aplicada a `main` e `develop`. | - [ ] PASS |
-| C1.6 | O Pull Request exige ao menos uma aprovação de outro integrante da equipe. | Regra de aprovação e revisão registrada. | - [ ] PASS |
-| C1.7 | Discussões de revisão precisam estar resolvidas antes do merge. | Regra de conversas resolvidas. | - [ ] PASS |
-| C1.8 | Checks obrigatórios precisam terminar com sucesso antes do merge. | Checks associados à regra de proteção. | - [ ] PASS |
-| C1.9 | Usuários administradores não podem ignorar as regras. | Opção equivalente a “não permitir bypass”. | - [ ] PASS |
-| C1.10 | Force push não é permitido nas branches protegidas. | Regra de restrição de force push. | - [ ] PASS |
-| C1.11 | Exclusão de `main` e `develop` não é permitida. | Regra de restrição de exclusão. | - [ ] PASS |
-| C1.12 | A proteção controla efetivamente a integração. | Tentativa ou evidência de PR/checks bloqueados quando uma condição obrigatória não é atendida. | - [ ] PASS |
+| C1.1 | O professor `cafeo-unicamp` foi adicionado como colaborador. | Configuração de acesso do repositório. | - [x] PASS |
+| C1.2 | O PED `Andre-Satorres` foi adicionado como colaborador. | Configuração de acesso do repositório. | - [x] PASS |
+| C1.3 | A branch `main` está protegida por Ruleset ou mecanismo equivalente. | Configuração visível da proteção. | - [x] PASS |
+| C1.4 | A branch `develop` está protegida por Ruleset ou mecanismo equivalente. | Configuração visível da proteção. | - [x] PASS |
+| C1.5 | A integração em branches protegidas exige Pull Request. | Regra ativa e aplicada a `main` e `develop`. | - [x] PASS |
+| C1.6 | O Pull Request exige ao menos uma aprovação de outro integrante da equipe. | Regra de aprovação e revisão registrada. | - [x] PASS | 
+| C1.7 | Discussões de revisão precisam estar resolvidas antes do merge. | Regra de conversas resolvidas. | - [x] PASS |. 
+| C1.8 | Checks obrigatórios precisam terminar com sucesso antes do merge. | Checks associados à regra de proteção. | - [x] PASS | ## Verificar
+| C1.9 | Usuários administradores não podem ignorar as regras. | Opção equivalente a “não permitir bypass”. | - [x] PASS |
+| C1.10 | Force push não é permitido nas branches protegidas. | Regra de restrição de force push. | - [x] PASS |
+| C1.11 | Exclusão de `main` e `develop` não é permitida. | Regra de restrição de exclusão. | - [x] PASS |
+| C1.12 | A proteção controla efetivamente a integração. | Tentativa ou evidência de PR/checks bloqueados quando uma condição obrigatória não é atendida. | - [x] PASS |
 
 ## C2 — Fluxo de desenvolvimento e revisão
 
