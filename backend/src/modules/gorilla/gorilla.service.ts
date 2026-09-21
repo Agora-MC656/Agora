@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
@@ -7,10 +8,23 @@ import type {
 } from "./gorilla.types.js";
 
 export class GorillaService {
-  private defaultDataPath = resolve(
-    import.meta.dirname,
-    "./fixtures/gorilla-sample.json",
-  );
+  private defaultDataPath = (() => {
+    const localFixture = resolve(
+      import.meta.dirname,
+      "./fixtures/gorilla-sample.json",
+    );
+    if (existsSync(localFixture)) {
+      return localFixture;
+    }
+    const srcFixture = resolve(
+      import.meta.dirname,
+      "../../../src/modules/gorilla/fixtures/gorilla-sample.json",
+    );
+    if (existsSync(srcFixture)) {
+      return srcFixture;
+    }
+    return localFixture;
+  })();
 
   /**
    * 1. Lê os dados salvos localmente pelo coletor no arquivo JSON.
