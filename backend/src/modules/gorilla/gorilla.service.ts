@@ -9,7 +9,7 @@ import type {
 export class GorillaService {
   private defaultDataPath = resolve(
     import.meta.dirname,
-    "../../../data/gorilla-sample.json",
+    "./fixtures/gorilla-sample.json",
   );
 
   /**
