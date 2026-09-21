@@ -57,47 +57,54 @@ npm run format
 npm run format:check
 ```
 
-## Prova de Conceito (POC) — Integração com a API do Gorilla
+## Módulo Gorilla (`backend/src/modules/gorilla`)
 
-Esta POC implementa a coleta e consumo de dados de redes sociais através da API do Gorilla, adotando a estratégia de **pre-fetching** (coleta assíncrona prévia com persistência em cache local) para fornecer respostas instantâneas no backend.
+Módulo responsável pela integração e fornecimento de dados da API do Gorilla no backend.
 
-### Como funciona:
+### Estrutura do Módulo:
 
-1. **Script Coletor (`backend/scripts/fetch-gorilla.ts`):** 
-   - Dispara uma busca via `POST` na API do Gorilla.
-   - Executa um loop de sondagem (*polling*) via `GET` a cada 2 segundos até o status mudar para `completed`.
-   - Salva o resultado retornado no arquivo local `backend/data/gorilla-sample.json`.
-2. **Endpoint no Backend (`backend/src/app.ts`):** 
-   - Cria a rota `GET /api/gorilla` no Express.
-   - Lê o arquivo `gorilla-sample.json` de forma não-bloqueante (`readFile`) e entrega os dados como JSON.
-   - Inclui cabeçalho de CORS liberando acesso para clientes.
+* `gorilla.types.ts`: Tipagens e interfaces dos dados retornados pela API.
+* `gorilla.service.ts`: Serviço que gerencia a leitura dos dados locais e o polling da API externa.
+* `gorilla.controller.ts`: Controller que recebe requisições HTTP e devolve os dados estruturados.
+* `gorilla.routes.ts`: Rota exposta em `/api/gorilla`.
+* `gorilla.test.ts`: Testes automatizados com Vitest (unitários e de integração).
 
-### Como executar a POC:
+### Endpoints Disponíveis:
 
-1. **Configurar a chave de API:**
-   No arquivo `backend/.env`, adicione sua chave de API:
+* `POST /api/gorilla/fetch`: Dispara uma nova busca na API externa do Gorilla (POST inicial + polling GET), persiste o resultado no arquivo local `backend/data/gorilla-sample.json` e retorna os dados atualizados. Opcionalmente aceita um corpo JSON `{ "query": "termo de busca" }`.
+* `GET /api/gorilla`: Retorna instantaneamente os dados já armazenados no arquivo local sem consumir créditos da API.
+
+### Como rodar os testes do módulo:
+
+```bash
+npm run test:coverage
+```
+
+### Como testar localmente:
+
+1. **Configurar a chave de API (necessária para o POST):**
+   No arquivo `backend/.env`:
    ```env
    GORILLA_API_KEY=grla_sua_chave_aqui
    ```
 
-2. **Executar a coleta de dados:**
-   A partir da raiz do repositório, rode o script:
-   ```bash
-   npx tsx backend/scripts/fetch-gorilla.ts
-   ```
-   *(O script buscará os dados na API e salvará o arquivo `backend/data/gorilla-sample.json`).*
-
-3. **Iniciar o backend:**
+2. **Iniciar o backend:**
    ```bash
    npm run dev --workspace backend
    ```
 
-4. **Verificar os dados retornados:**
-   Acesse pelo navegador em:
-   ```text
-   https://localhost:3000/api/gorilla
+3. **Disparar uma nova busca na API do Gorilla (POST):**
+   Você pode passar o termo de busca diretamente na URL (recomendado para Windows PowerShell):
+   ```powershell
+   curl.exe -k -X POST "https://localhost:3000/api/gorilla/fetch?query=Gremio"
    ```
-   Ou pelo terminal:
-   ```bash
-   curl -k https://localhost:3000/api/gorilla
+   Ou sem parâmetros (usará o tema padrão `"orçamento participativo"`):
+   ```powershell
+   curl.exe -k -X POST https://localhost:3000/api/gorilla/fetch
    ```
+
+4. **Ler os dados retornados e cacheados (GET):**
+   ```powershell
+   curl.exe -k https://localhost:3000/api/gorilla
+   ```
+
