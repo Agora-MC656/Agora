@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
-import { handleRegister, handleLogin } from './controller';
+import { handleRegister, handleLogin } from './controller.js';
 
 const router = Router();
 

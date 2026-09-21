@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { UserRegistration, LoginCredentials } from './types.js';
+import { UserRegistration, LoginCredentials, UserSaved } from './types.js';
 
 // Path to the JSON file that will act as a simple database
 const DB_FILE_PATH = path.resolve('users.json'); 
 
 // Auxiliary function to read users from the JSON file
-const readUsersFromFile = async (): Promise<UserRegistration[]> => {
+const readUsersFromFile = async (): Promise<UserSaved[]> => {
   try {
     const data = await fs.readFile(DB_FILE_PATH, 'utf-8');
     return JSON.parse(data);
@@ -18,7 +18,7 @@ const readUsersFromFile = async (): Promise<UserRegistration[]> => {
 };
 
 // Auxiliary function to save users to the JSON file
-const saveDB = async (users: UserRegistration[]): Promise<void> => {
+const saveDB = async (users: UserSaved[]): Promise<void> => {
   try {
     await fs.writeFile(DB_FILE_PATH, JSON.stringify(users, null, 2), 'utf-8');
   } catch (error) {
@@ -30,7 +30,7 @@ const saveDB = async (users: UserRegistration[]): Promise<void> => {
 export const registerUser = async (userData: UserRegistration) => {
   const usersDB = await readUsersFromFile(); // Reads the current users from the JSON file
 
-  const existingUser = users.find(user => user.name === userData.name || user.email === userData.email);
+  const existingUser = usersDB.find(user => user.name === userData.name || user.email === userData.email);
   if (existingUser) {
     throw new Error('User with this name or email already exists');
   }
@@ -58,15 +58,15 @@ export const registerUser = async (userData: UserRegistration) => {
     throw new Error('Password must be at least 6 characters long');
   }
 
-  const newUser: UserRegistration = {
+  const newUser: UserSaved = {
     name: userData.name,
     email: userData.email,
     institution: userData.institution,
     age: userData.age,
     gender: userData.gender,
-    passwordPlain: passwordHash, // Store the hashed password
+    passwordHash: passwordHash, // Store the hashed password
   };
-
+  
   usersDB.push(newUser);
   await saveDB(usersDB); // Save the updated users to the JSON file
 
@@ -83,7 +83,7 @@ export const loginUser = async (credentials: LoginCredentials) => {
   }
 
   // Check if the provided password matches the stored hashed password
-  const isMatch = await bcrypt.compare(credentials.passwordPlain, user.passwordPlain);
+  const isMatch = await bcrypt.compare(credentials.passwordPlain, user.passwordHash);
   if (!isMatch) {
     return { success: false, message: 'Invalid password' };
   }
