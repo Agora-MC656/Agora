@@ -2,20 +2,8 @@
   "search_id": "1a415a2d-4098-4733-9dd5-51b30d24c6ca",
   "status": "completed",
   "query": "Gremio",
-  "requested_sources": [
-    "reddit",
-    "twitter",
-    "bluesky",
-    "linkedin",
-    "youtube"
-  ],
-  "done_sources": [
-    "reddit",
-    "twitter",
-    "bluesky",
-    "linkedin",
-    "youtube"
-  ],
+  "requested_sources": ["reddit", "twitter", "bluesky", "linkedin", "youtube"],
+  "done_sources": ["reddit", "twitter", "bluesky", "linkedin", "youtube"],
   "pending_sources": [],
   "results": [
     {
@@ -1888,9 +1876,7 @@
         "hot_posts": 1,
         "total_engagement": 2,
         "avg_score": 0.86,
-        "sample_titles": [
-          "Grêmio morreu. Rogerinho vai ter muito trabalho."
-        ]
+        "sample_titles": ["Grêmio morreu. Rogerinho vai ter muito trabalho."]
       },
       {
         "id": "mcboessio.bsky.social",
@@ -1910,9 +1896,7 @@
         "hot_posts": 1,
         "total_engagement": 1,
         "avg_score": 0.86,
-        "sample_titles": [
-          "O Grêmio tem tudo pra passar a data Fifa no Z4."
-        ]
+        "sample_titles": ["O Grêmio tem tudo pra passar a data Fifa no Z4."]
       }
     ],
     "x_hashtags": [],
@@ -1996,9 +1980,7 @@
         "hot_posts": 1,
         "total_engagement": 372319,
         "avg_score": 0.9,
-        "sample_titles": [
-          "AO VIVO | GRÊMIO X PALMEIRAS I BRASILEIRÃO 2026"
-        ]
+        "sample_titles": ["AO VIVO | GRÊMIO X PALMEIRAS I BRASILEIRÃO 2026"]
       },
       {
         "id": "Turma do Amendoim",

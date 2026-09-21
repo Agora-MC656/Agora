@@ -36,31 +36,37 @@ describe("Módulo Gorilla", () => {
       // 2ª chamada: GET polling status: running
       // 3ª chamada: GET polling status: completed
       let callCount = 0;
-      const mockFetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
-        callCount++;
-        if (init?.method === "POST") {
+      const mockFetch = vi
+        .fn()
+        .mockImplementation((url: string, init?: RequestInit) => {
+          callCount++;
+          if (init?.method === "POST") {
+            return Promise.resolve({
+              ok: true,
+              json: () =>
+                Promise.resolve({
+                  search_id: "test-search-123",
+                  status: "running",
+                }),
+            } as Response);
+          }
+
+          const isLast = callCount >= 3;
           return Promise.resolve({
             ok: true,
-            json: () => Promise.resolve({ search_id: "test-search-123", status: "running" }),
+            json: () =>
+              Promise.resolve(
+                isLast
+                  ? {
+                      search_id: "test-search-123",
+                      status: "completed",
+                      total: 1,
+                      results: [{ id: "mock-1", title: "Post orcamento" }],
+                    }
+                  : { status: "running" },
+              ),
           } as Response);
-        }
-
-        const isLast = callCount >= 3;
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve(
-              isLast
-                ? {
-                    search_id: "test-search-123",
-                    status: "completed",
-                    total: 1,
-                    results: [{ id: "mock-1", title: "Post orcamento" }],
-                  }
-                : { status: "running" },
-            ),
-        } as Response);
-      });
+        });
 
       const result = await service.fetchAndSave(
         "orçamento participativo",
@@ -80,9 +86,9 @@ describe("Módulo Gorilla", () => {
     });
 
     it("deve lançar erro em fetchAndSave se a chave de API não for fornecida", async () => {
-      await expect(
-        service.fetchAndSave("teste", "", fetch),
-      ).rejects.toThrow("GORILLA_API_KEY não foi configurada");
+      await expect(service.fetchAndSave("teste", "", fetch)).rejects.toThrow(
+        "GORILLA_API_KEY não foi configurada",
+      );
     });
 
     it("deve lançar erro se o POST inicial falhar", async () => {
@@ -104,12 +110,7 @@ describe("Módulo Gorilla", () => {
       });
 
       await expect(
-        service.pollSearchResults(
-          "id-123",
-          "key-123",
-          mockFetch,
-          0,
-        ),
+        service.pollSearchResults("id-123", "key-123", mockFetch, 0),
       ).rejects.toThrow("Erro no polling: Unauthorized");
     });
   });

@@ -15,9 +15,7 @@ export class GorillaService {
   /**
    * 1. Lê os dados salvos localmente pelo coletor no arquivo JSON.
    */
-  async getStoredResults(
-    customPath?: string,
-  ): Promise<GorillaSearchResults> {
+  async getStoredResults(customPath?: string): Promise<GorillaSearchResults> {
     const targetPath = customPath ?? this.defaultDataPath;
     const content = await readFile(targetPath, "utf-8");
     return JSON.parse(content) as GorillaSearchResults;
