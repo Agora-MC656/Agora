@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "concurrently -n backend,frontend -c blue,magenta \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
-    "build": "npm run b uild --workspaces --if-present",
+    "build": "npm run b uild --workspaces",
     "test": "npm run test --workspaces --if-present",
     "test:coverage": "npm run test:coverage --workspaces --if-present",
     "lint": "eslint .",
