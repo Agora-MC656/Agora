@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request: # Antes
     branches:
       - develop
       - main
-  push:
+  push: # Depois
     branches:
       - develop
       - main
@@ -31,7 +31,7 @@ jobs:
       - name: Configurar o Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: package-lock.json
 
