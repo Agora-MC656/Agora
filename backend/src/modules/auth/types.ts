@@ -1,5 +1,6 @@
 export interface UserRegistration {
   name: string;
+  email: string;
   institution: string;
   age: number;
   gender: string;
@@ -7,6 +8,6 @@ export interface UserRegistration {
 }
 
 export interface LoginCredentials {
-  name: string;
+  name_email: string;
   passwordPlain: string;
 }
