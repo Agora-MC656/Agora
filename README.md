@@ -99,3 +99,59 @@ npm run lint:fix
 npm run format
 npm run format:check
 ```
+
+## Módulo Gorilla (`backend/src/modules/gorilla`)
+
+Módulo responsável pela integração e fornecimento de dados da API do Gorilla no backend.
+
+### Estrutura do Módulo:
+
+- `gorilla.types.ts`: Tipagens e interfaces dos dados retornados pela API.
+- `gorilla.service.ts`: Serviço que gerencia a leitura dos dados locais e o polling da API externa.
+- `gorilla.controller.ts`: Controller que recebe requisições HTTP e devolve os dados estruturados.
+- `gorilla.routes.ts`: Rota exposta em `/api/gorilla`.
+- `gorilla.test.ts`: Testes automatizados com Vitest (unitários e de integração).
+
+### Endpoints Disponíveis:
+
+- `POST /api/gorilla/fetch`: Dispara uma nova busca na API externa do Gorilla (POST inicial + polling GET), persiste o resultado no arquivo local `backend/src/modules/gorilla/fixtures/gorilla-sample.json` e retorna os dados atualizados. Aceita `query` via query parameter na URL ou no corpo JSON.
+- `GET /api/gorilla`: Retorna instantaneamente os dados já armazenados no arquivo local sem consumir créditos da API.
+
+### Como rodar os testes do módulo:
+
+```bash
+npm run test:coverage
+```
+
+### Como testar localmente:
+
+1. **Configurar a chave de API (necessária para o POST):**
+   No arquivo `backend/.env`:
+
+   ```env
+   GORILLA_API_KEY=grla_sua_chave_aqui
+   ```
+
+2. **Iniciar o backend:**
+
+   ```bash
+   npm run dev --workspace backend
+   ```
+
+3. **Disparar uma nova busca na API do Gorilla (POST):**
+   Você pode passar o termo de busca diretamente na URL (recomendado para Windows PowerShell):
+
+   ```powershell
+   curl.exe -k -X POST "https://localhost:3000/api/gorilla/fetch?query=Gremio"
+   ```
+
+   Ou sem parâmetros (usará o tema padrão `"orçamento participativo"`):
+
+   ```powershell
+   curl.exe -k -X POST https://localhost:3000/api/gorilla/fetch
+   ```
+
+4. **Ler os dados retornados e cacheados (GET):**
+   ```powershell
+   curl.exe -k https://localhost:3000/api/gorilla
+   ```
