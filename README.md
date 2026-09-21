@@ -46,6 +46,24 @@ npm run dev
 
 O frontend será servido em `http://localhost:5173` e o backend em `https://localhost:3000`.
 
+## Gerador de pautas
+
+Para usar o gerador, preencha `OPENAI_API_KEY` no arquivo `backend/.env` com
+uma chave da API da OpenAI. Sem a chave, o backend informa que o serviço não
+está configurado. A chave não deve ser versionada.
+
+No frontend, informe um tema ou contexto e clique em **Gerar pauta**. O agente
+retorna um título e uma lista de pontos para discussão. A integração usa o modelo
+`gpt-6-astra` da OpenAI e pode gerar custos conforme o uso da chave.
+
+A rota também pode ser chamada diretamente:
+
+```bash
+curl -k -X POST https://localhost:3000/api/agenda \
+  -H "Content-Type: application/json" \
+  -d '{"context": "prioridades do orçamento do próximo semestre"}'
+```
+
 ## Votação
 
 Primeira versão do módulo de votação: cada participante registra um único voto
