@@ -1,2 +1,17 @@
 # macOS
-.DS_Store 
+.DS_Store
+
+# Dependencies and builds
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Local HTTPS certificates
+backend/certs/*
+!backend/certs/.gitkeep
