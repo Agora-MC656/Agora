@@ -25,7 +25,7 @@ async function run() {
       "x-api-key": API_KEY as string,
     },
     body: JSON.stringify({
-      query: "orçamento participativo",
+      query: "Principais problemas estruturais do Grêmio Foot-Ball Porto Alegrense",
       since: "30d",
       limit: 5, // limite pequeno para gastar poucos créditos e ser rápido
     }),
