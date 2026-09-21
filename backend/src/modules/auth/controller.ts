@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { registerUser, loginUser } from './service.js';
-import { LoginCredentials, UserRegistration } from './types.js';
+import { Request, Response } from "express";
+import { registerUser, loginUser } from "./service.js";
+import { LoginCredentials, UserRegistration } from "./types.js";
 
 export const handleRegister = async (
   req: Request<Record<string, never>, unknown, UserRegistration>,
@@ -12,7 +12,7 @@ export const handleRegister = async (
 
     res.status(201).json(result);
   } catch {
-    res.status(400).json({ error: 'Failed to register user' });
+    res.status(400).json({ error: "Failed to register user" });
   }
 };
 
@@ -26,7 +26,7 @@ export const handleLogin = async (
 
     res.status(200).json(result);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Login failed';
+    const message = error instanceof Error ? error.message : "Login failed";
     res.status(401).json({ error: message });
   }
 };

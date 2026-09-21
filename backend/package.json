@@ -12,20 +12,19 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "bcrypt": "^6.0.0",
-=======
     "@ai-sdk/openai": "^4.0.72",
     "ai": "^7.0.108",
->>>>>>> 3cc32eeedf1390ff0d378df1041c553a43ac3d05
+    "bcrypt": "^6.0.0",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.7.0"
+    "express-rate-limit": "^8.7.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
+    "@vitest/coverage-v8": "^5.0.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.1"

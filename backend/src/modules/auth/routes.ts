@@ -1,7 +1,7 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import rateLimit from 'express-rate-limit';
-import { handleRegister, handleLogin } from './controller.js';
-import { UserRegistration } from './types.js';
+import { Router, Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
+import { handleRegister, handleLogin } from "./controller.js";
+import { UserRegistration } from "./types.js";
 
 const router = Router();
 
@@ -9,36 +9,38 @@ const router = Router();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 requests per windowMs
-  message: 'Too many requests from this IP, please try again after 15 minutes',
+  message: "Too many requests from this IP, please try again after 15 minutes",
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
 //
 const validateRegistrationData = (
-    req: Request<Record<string, never>, unknown, UserRegistration>,
-    res: Response,
-    next: NextFunction,
+  req: Request<Record<string, never>, unknown, UserRegistration>,
+  res: Response,
+  next: NextFunction,
 ) => {
-    const { name, email, institution, age, gender, passwordPlain } = req.body;
+  const { name, email, institution, age, gender, passwordPlain } = req.body;
 
-    if (!name || !email || !institution || !age || !gender || !passwordPlain) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+  if (!name || !email || !institution || !age || !gender || !passwordPlain) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
 
-    if (age < 0) {
-        return res.status(400).json({ error: 'Age must be a positive number' });
-    }
+  if (age < 0) {
+    return res.status(400).json({ error: "Age must be a positive number" });
+  }
 
-    if (!passwordPlain || passwordPlain.length < 6) {
-        return res.status(400).json({ error: 'Password must be at least 6 characters long' });
-    }
+  if (!passwordPlain || passwordPlain.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long" });
+  }
 
-    next();
+  next();
 };
 
-router.post('/register', validateRegistrationData, handleRegister);
+router.post("/register", validateRegistrationData, handleRegister);
 
-router.post('/login', limiter, handleLogin);
+router.post("/login", limiter, handleLogin);
 
 export default router;
