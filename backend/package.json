@@ -19,9 +19,16 @@
     "pdf-parse": "^2.4.5",
     "@ai-sdk/openai": "^4.0.72",
     "ai": "^7.0.108",
+    "@ai-sdk/openai": "^4.0.72",
+    "ai": "^7.0.108",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
     "@types/supertest": "^7.2.1",
