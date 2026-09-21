@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request: # Antes
     branches:
       - develop
       - main
-  push:
+  push: # Depois
     branches:
       - develop
       - main
