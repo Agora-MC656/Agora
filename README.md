@@ -46,6 +46,31 @@ npm run dev
 
 O frontend será servido em `http://localhost:5173` e o backend em `https://localhost:3000`.
 
+## Votação
+
+Primeira versão do módulo de votação: cada participante registra um único voto
+por pauta e qualquer pessoa consulta a apuração. Os votos ficam em memória, o
+que é suficiente enquanto o armazenamento definitivo não é definido.
+
+Registrar um voto (`sim` ou `nao`):
+
+```bash
+curl -k -X POST https://localhost:3000/voting/proposals/orcamento-2026/votes \
+  -H "Content-Type: application/json" \
+  -d '{"voterId": "ana", "option": "sim"}'
+```
+
+Consultar a apuração de uma pauta:
+
+```bash
+curl -k https://localhost:3000/voting/proposals/orcamento-2026/results
+```
+
+| Método | Rota                                    | Respostas                                                                |
+| ------ | --------------------------------------- | ------------------------------------------------------------------------ |
+| `POST` | `/voting/proposals/:proposalId/votes`   | `201` voto registrado, `400` corpo inválido, `409` participante já votou |
+| `GET`  | `/voting/proposals/:proposalId/results` | `200` com os totais por opção                                            |
+
 Outros comandos disponíveis:
 
 ```bash
