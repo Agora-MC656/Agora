@@ -24,6 +24,11 @@ export const handleLogin = async (
     const credentials = req.body;
     const result = await loginUser(credentials);
 
+    if (!result.success) {
+      res.status(401).json(result);
+      return;
+    }
+
     res.status(200).json(result);
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Login failed";
