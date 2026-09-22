@@ -46,6 +46,49 @@ npm run dev
 
 O frontend será servido em `http://localhost:5173` e o backend em `https://localhost:3000`.
 
+## Gerador de pautas
+
+Para usar o gerador, preencha `OPENAI_API_KEY` no arquivo `backend/.env` com
+uma chave da API da OpenAI. Sem a chave, o backend informa que o serviço não
+está configurado. A chave não deve ser versionada.
+
+No frontend, informe um tema ou contexto e clique em **Gerar pauta**. O agente
+retorna um título e uma lista de pontos para discussão. A integração usa o modelo
+`gpt-6-astra` da OpenAI e pode gerar custos conforme o uso da chave.
+
+A rota também pode ser chamada diretamente:
+
+```bash
+curl -k -X POST https://localhost:3000/api/agenda \
+  -H "Content-Type: application/json" \
+  -d '{"context": "prioridades do orçamento do próximo semestre"}'
+```
+
+## Votação
+
+Primeira versão do módulo de votação: cada participante registra um único voto
+por pauta e qualquer pessoa consulta a apuração. Os votos ficam em memória, o
+que é suficiente enquanto o armazenamento definitivo não é definido.
+
+Registrar um voto (`sim` ou `nao`):
+
+```bash
+curl -k -X POST https://localhost:3000/voting/proposals/orcamento-2026/votes \
+  -H "Content-Type: application/json" \
+  -d '{"voterId": "ana", "option": "sim"}'
+```
+
+Consultar a apuração de uma pauta:
+
+```bash
+curl -k https://localhost:3000/voting/proposals/orcamento-2026/results
+```
+
+| Método | Rota                                    | Respostas                                                                |
+| ------ | --------------------------------------- | ------------------------------------------------------------------------ |
+| `POST` | `/voting/proposals/:proposalId/votes`   | `201` voto registrado, `400` corpo inválido, `409` participante já votou |
+| `GET`  | `/voting/proposals/:proposalId/results` | `200` com os totais por opção                                            |
+
 Outros comandos disponíveis:
 
 ```bash
@@ -56,3 +99,59 @@ npm run lint:fix
 npm run format
 npm run format:check
 ```
+
+## Módulo Gorilla (`backend/src/modules/gorilla`)
+
+Módulo responsável pela integração e fornecimento de dados da API do Gorilla no backend.
+
+### Estrutura do Módulo:
+
+- `gorilla.types.ts`: Tipagens e interfaces dos dados retornados pela API.
+- `gorilla.service.ts`: Serviço que gerencia a leitura dos dados locais e o polling da API externa.
+- `gorilla.controller.ts`: Controller que recebe requisições HTTP e devolve os dados estruturados.
+- `gorilla.routes.ts`: Rota exposta em `/api/gorilla`.
+- `gorilla.test.ts`: Testes automatizados com Vitest (unitários e de integração).
+
+### Endpoints Disponíveis:
+
+- `POST /api/gorilla/fetch`: Dispara uma nova busca na API externa do Gorilla (POST inicial + polling GET), persiste o resultado no arquivo local `backend/src/modules/gorilla/fixtures/gorilla-sample.json` e retorna os dados atualizados. Aceita `query` via query parameter na URL ou no corpo JSON.
+- `GET /api/gorilla`: Retorna instantaneamente os dados já armazenados no arquivo local sem consumir créditos da API.
+
+### Como rodar os testes do módulo:
+
+```bash
+npm run test:coverage
+```
+
+### Como testar localmente:
+
+1. **Configurar a chave de API (necessária para o POST):**
+   No arquivo `backend/.env`:
+
+   ```env
+   GORILLA_API_KEY=grla_sua_chave_aqui
+   ```
+
+2. **Iniciar o backend:**
+
+   ```bash
+   npm run dev --workspace backend
+   ```
+
+3. **Disparar uma nova busca na API do Gorilla (POST):**
+   Você pode passar o termo de busca diretamente na URL (recomendado para Windows PowerShell):
+
+   ```powershell
+   curl.exe -k -X POST "https://localhost:3000/api/gorilla/fetch?query=Gremio"
+   ```
+
+   Ou sem parâmetros (usará o tema padrão `"orçamento participativo"`):
+
+   ```powershell
+   curl.exe -k -X POST https://localhost:3000/api/gorilla/fetch
+   ```
+
+4. **Ler os dados retornados e cacheados (GET):**
+   ```powershell
+   curl.exe -k https://localhost:3000/api/gorilla
+   ```

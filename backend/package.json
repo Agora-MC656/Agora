@@ -5,20 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "inspect:budget-pdf": "tsx src/scripts/inspect-ic-budget-pdf.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.72",
+    "ai": "^7.0.108",
+    "bcrypt": "^6.0.0",
+    "cheerio": "^1.2.0",
     "dotenv": "^18.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "pdf-parse": "^2.4.5",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
+    "@types/supertest": "^7.2.1",
     "@vitest/coverage-v8": "^5.0.1",
+    "supertest": "^7.2.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.1"

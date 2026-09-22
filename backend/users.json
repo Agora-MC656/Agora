@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Test User",
+    "email": "test@unicamp.br",
+    "institution": "IC",
+    "age": 20,
+    "gender": "other",
+    "passwordHash": "$2b$10$zNkETxUqG6C9CWA7OdQ9rOyBO4RZswk2bwXN99siI/CUqE0chkNj."
+  }
+]
