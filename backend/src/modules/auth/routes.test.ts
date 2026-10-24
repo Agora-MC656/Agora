@@ -58,6 +58,9 @@ describe("POST /auth/register validation", () => {
       .send({ ...validRegistration, gender: "unknown" });
 
     expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: "Gender must be male, female, or other",
+    });
   });
 
   it("rejects an email without @", async () => {
@@ -66,5 +69,6 @@ describe("POST /auth/register validation", () => {
       .send({ ...validRegistration, email: "pessoa.unicamp.br" });
 
     expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Invalid email format" });
   });
 });
