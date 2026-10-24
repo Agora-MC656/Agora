@@ -1,7 +1,10 @@
 import { PDFParse } from "pdf-parse";
 
 import { UnsupportedIcBudgetProposalYearError } from "./budget-proposal.errors.js";
-import { parseIcBudgetProposal2020 } from "./ic-budget-proposal.parser.js";
+import {
+  IC_BUDGET_PROPOSAL_PARSERS,
+  type BudgetProposalParser,
+} from "./ic-budget-proposal.parsers.js";
 import {
   IcBudgetProposalWebsiteSource,
   type BudgetProposalSource,
@@ -26,16 +29,19 @@ export class IcBudgetProposalExtractor {
     private readonly source: BudgetProposalSource = new IcBudgetProposalWebsiteSource(),
     private readonly pdfTextExtractor: PdfTextExtractor = extractPdfText,
     private readonly now: () => Date = () => new Date(),
+    private readonly parsers: readonly BudgetProposalParser[] = IC_BUDGET_PROPOSAL_PARSERS,
   ) {}
 
   async extract(year: number): Promise<BudgetProposal> {
-    if (year !== 2020) {
+    const parser = this.parsers.find((candidate) => candidate.year === year);
+
+    if (!parser) {
       throw new UnsupportedIcBudgetProposalYearError(year);
     }
 
     const document = await this.source.fetch(year);
     const text = await this.pdfTextExtractor(document.data);
-    const items = parseIcBudgetProposal2020(text);
+    const items = parser.parse(text);
 
     if (items.length === 0) {
       throw new Error(`No budget proposal items were extracted for ${year}.`);
