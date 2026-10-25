@@ -3,7 +3,18 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { IcBudgetProposalExtractor } from "./ic-budget-proposal.extractor.js";
+import type { BudgetProposalParser } from "./ic-budget-proposal.parsers.js";
 import type { BudgetProposalSource } from "./ic-budget-proposal.source.js";
+
+const pdfSource: BudgetProposalSource = {
+  fetch: (year) =>
+    Promise.resolve({
+      year,
+      pageUrl: "https://ic.unicamp.br/sobre/regimentos-normas-e-documentos/",
+      pdfUrl: `https://ic.unicamp.br/proposta-${year}.pdf`,
+      data: Uint8Array.from([37, 80, 68, 70]),
+    }),
+};
 
 const fixtureUrl = new URL(
   "./fixtures/ic-budget-proposal-2020.txt",
@@ -54,6 +65,52 @@ describe("IcBudgetProposalExtractor", () => {
 
     await expect(extractor.extract(2021)).rejects.toThrow(
       "Unsupported IC budget proposal year: 2021",
+    );
+  });
+
+  it("uses the parser registered for the requested year", async () => {
+    const parser2021: BudgetProposalParser = {
+      year: 2021,
+      parse: (text) => [
+        {
+          section: "Informática",
+          subsection: null,
+          description: text,
+          estimatedAmountCents: 100,
+          approvedAmountCents: 50,
+          fundingSource: "Unicamp",
+          priority: "P1",
+        },
+      ],
+    };
+    const extractor = new IcBudgetProposalExtractor(
+      pdfSource,
+      () => Promise.resolve("Item de 2021"),
+      () => new Date("2026-10-24T12:00:00.000Z"),
+      [parser2021],
+    );
+
+    const proposal = await extractor.extract(2021);
+
+    expect(proposal.year).toBe(2021);
+    expect(proposal.items).toEqual([
+      expect.objectContaining({ description: "Item de 2021" }),
+    ]);
+  });
+
+  it("rejects a year that has no registered parser", async () => {
+    const extractor = new IcBudgetProposalExtractor(
+      {
+        fetch: () =>
+          Promise.reject(new Error("The source must not be called.")),
+      },
+      () => Promise.resolve(""),
+      () => new Date(),
+      [],
+    );
+
+    await expect(extractor.extract(2020)).rejects.toThrow(
+      "Unsupported IC budget proposal year: 2020",
     );
   });
 });
