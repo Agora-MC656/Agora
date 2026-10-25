@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { promises as fs } from "fs";
 import path from "path";
 import { UserRegistration, LoginCredentials, UserSaved } from "./types.js";
+import { validateRegistration } from "./validation.js";
 
 // Path to the JSON file that will act as a simple database
 const DB_FILE_PATH = path.resolve("users.json");
@@ -50,6 +51,11 @@ const saveDB = async (users: UserSaved[]): Promise<void> => {
 
 // Function to register a new user
 export const registerUser = async (userData: UserRegistration) => {
+  const validationError = validateRegistration(userData);
+  if (validationError) {
+    throw new Error(validationError);
+  }
+
   const usersDB = await readUsersFromFile(); // Reads the current users from the JSON file
 
   const existingUser = usersDB.find(
@@ -61,33 +67,6 @@ export const registerUser = async (userData: UserRegistration) => {
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(userData.passwordPlain, saltRounds);
-
-  if (
-    !userData.name ||
-    !userData.institution ||
-    !userData.age ||
-    !userData.gender ||
-    !userData.passwordPlain ||
-    !userData.email
-  ) {
-    throw new Error("All fields are required");
-  }
-
-  if (userData.age < 0) {
-    throw new Error("Age must be a positive number");
-  }
-
-  if (!["male", "female", "other"].includes(userData.gender.toLowerCase())) {
-    throw new Error("Gender must be male, female, or other");
-  }
-
-  if (!userData.email.includes("@")) {
-    throw new Error("Invalid email format");
-  }
-
-  if (userData.passwordPlain.length < 6) {
-    throw new Error("Password must be at least 6 characters long");
-  }
 
   const newUser: UserSaved = {
     name: userData.name,
