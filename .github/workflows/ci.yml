@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  pull_request: # Antes
+  pull_request:
     branches:
       - develop
       - main
-  push: # Depois
+  push:
     branches:
       - develop
       - main
@@ -22,11 +22,13 @@ jobs:
   validate:
     name: Validar projeto
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Baixar o repositório
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Configurar o Node.js
         uses: actions/setup-node@v7
@@ -49,6 +51,11 @@ jobs:
 
       - name: Executar os testes com cobertura
         run: npm run test:coverage
+
+      - name: Analisar com SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@v8.3.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Disponibilizar o relatório de cobertura
         if: ${{ !cancelled() }}
