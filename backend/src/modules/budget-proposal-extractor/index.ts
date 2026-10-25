@@ -21,6 +21,11 @@ export {
   IcBudgetProposalExtractor,
 } from "./ic-budget-proposal.extractor.js";
 export {
+  IC_BUDGET_PROPOSAL_PARSERS,
+  icBudgetProposal2020Parser,
+  type BudgetProposalParser,
+} from "./ic-budget-proposal.parsers.js";
+export {
   parseBrazilianCurrency,
   parseBudgetItemLine,
   parseIcBudgetProposal2020,

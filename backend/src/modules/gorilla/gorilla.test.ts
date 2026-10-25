@@ -6,6 +6,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { gorillaRouter } from "./gorilla.routes.js";
 import { GorillaService } from "./gorilla.service.js";
+import type { SocialSearchResults } from "./gorilla.types.js";
+import type { SocialSearchProvider } from "./social-search.provider.js";
 
 describe("Módulo Gorilla", () => {
   describe("GorillaService", () => {
@@ -31,87 +33,52 @@ describe("Módulo Gorilla", () => {
       ).rejects.toThrow();
     });
 
-    it("deve realizar o fluxo completo com fetchAndSave (POST, polling e salvar arquivo)", async () => {
-      // 1ª chamada: POST inicia busca
-      // 2ª chamada: GET polling status: running
-      // 3ª chamada: GET polling status: completed
-      let callCount = 0;
-      const mockFetch = vi
-        .fn()
-        .mockImplementation((url: string, init?: RequestInit) => {
-          callCount++;
-          if (init?.method === "POST") {
-            return Promise.resolve({
-              ok: true,
-              json: () =>
-                Promise.resolve({
-                  search_id: "test-search-123",
-                  status: "running",
-                }),
-            } as Response);
-          }
-
-          const isLast = callCount >= 3;
-          return Promise.resolve({
-            ok: true,
-            json: () =>
-              Promise.resolve(
-                isLast
-                  ? {
-                      search_id: "test-search-123",
-                      status: "completed",
-                      total: 1,
-                      results: [{ id: "mock-1", title: "Post orcamento" }],
-                    }
-                  : { status: "running" },
-              ),
-          } as Response);
-        });
-
-      const result = await service.fetchAndSave(
-        "orçamento participativo",
-        "mock-key",
-        mockFetch,
+    it("deve buscar no provedor configurado e salvar o resultado", async () => {
+      const results: SocialSearchResults = {
+        search_id: "test-search-123",
+        status: "completed",
+        total: 1,
+        results: [],
+      };
+      const search = vi.fn().mockResolvedValue(results);
+      const provider: SocialSearchProvider = { search };
+      const serviceWithFakeProvider = new GorillaService(
+        provider,
         tempTestPath,
-        0, // sem delay para teste rápido
       );
 
-      expect(callCount).toBe(3);
-      expect(result.status).toBe("completed");
-      expect(result.results).toHaveLength(1);
+      const returned = await serviceWithFakeProvider.fetchAndSave("teste");
 
-      // Confirma que o arquivo foi realmente escrito e pode ser lido de volta
-      const savedData = await service.getStoredResults(tempTestPath);
-      expect(savedData.search_id).toBe("test-search-123");
-    });
-
-    it("deve lançar erro em fetchAndSave se a chave de API não for fornecida", async () => {
-      await expect(service.fetchAndSave("teste", "", fetch)).rejects.toThrow(
-        "GORILLA_API_KEY não foi configurada",
+      expect(search).toHaveBeenCalledWith("teste");
+      expect(returned).toEqual(results);
+      await expect(serviceWithFakeProvider.getStoredResults()).resolves.toEqual(
+        results,
       );
     });
 
-    it("deve lançar erro se o POST inicial falhar", async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: false,
-        status: 400,
-        text: () => Promise.resolve("Bad Request"),
+    it("deve usar a consulta padrão quando nenhuma for informada", async () => {
+      const search = vi.fn().mockResolvedValue({
+        search_id: "padrao",
+        status: "completed",
+        results: [],
       });
+      const provider: SocialSearchProvider = { search };
 
-      await expect(
-        service.fetchAndSave("teste", "mock-key", mockFetch),
-      ).rejects.toThrow("Falha no POST do Gorilla (400)");
+      await new GorillaService(provider, tempTestPath).fetchAndSave();
+
+      expect(search).toHaveBeenCalledWith("orçamento participativo");
     });
 
-    it("deve lançar erro caso a resposta do polling não seja ok", async () => {
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: false,
-        statusText: "Unauthorized",
-      });
+    it("não deve sobrescrever o arquivo quando o provedor falhar", async () => {
+      const provider: SocialSearchProvider = {
+        search: vi.fn().mockRejectedValue(new Error("fornecedor indisponível")),
+      };
+      const before = await service.getStoredResults();
 
       await expect(
-        service.pollSearchResults("id-123", "key-123", mockFetch, 0),
-      ).rejects.toThrow("Erro no polling: Unauthorized");
+        new GorillaService(provider, tempTestPath).fetchAndSave("teste"),
+      ).rejects.toThrow("fornecedor indisponível");
+      await expect(service.getStoredResults()).resolves.toEqual(before);
     });
   });
 
