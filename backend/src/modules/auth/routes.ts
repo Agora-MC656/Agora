@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import { handleRegister, handleLogin } from "./controller.js";
 import { UserRegistration } from "./types.js";
+import { validateRegistration } from "./validation.js";
 
 const router = Router();
 
@@ -14,26 +15,15 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-//
 const validateRegistrationData = (
   req: Request<Record<string, never>, unknown, UserRegistration>,
   res: Response,
   next: NextFunction,
 ) => {
-  const { name, email, institution, age, gender, passwordPlain } = req.body;
+  const error = validateRegistration(req.body);
 
-  if (!name || !email || !institution || !age || !gender || !passwordPlain) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
-
-  if (age < 0) {
-    return res.status(400).json({ error: "Age must be a positive number" });
-  }
-
-  if (!passwordPlain || passwordPlain.length < 6) {
-    return res
-      .status(400)
-      .json({ error: "Password must be at least 6 characters long" });
+  if (error) {
+    return res.status(400).json({ error });
   }
 
   next();
