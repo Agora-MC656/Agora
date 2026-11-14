@@ -30,7 +30,7 @@ describe("parseBrazilianCurrency", () => {
 });
 
 describe("parseBudgetItemLine", () => {
-  it("parses a regular budget item", () => {
+  it("[C3-V1] parses a regular budget item", () => {
     const line =
       "Atualização de servidores (novas soluções) R$ 195.000,00 R$ 60.000,00 Unicamp P1";
 
@@ -43,7 +43,31 @@ describe("parseBudgetItemLine", () => {
     });
   });
 
-  it("parses visual hyphens and a composite source", () => {
+  it("[C3-V1] parses DEPI funding, P4 priority, and distinct amounts", () => {
+    expect(
+      parseBudgetItemLine("Aquisição de GPUs R$ 10.000,00 R$ 8.500,00 DEPI P4"),
+    ).toEqual({
+      description: "Aquisição de GPUs",
+      estimatedAmountCents: 1_000_000,
+      approvedAmountCents: 850_000,
+      fundingSource: "DEPI",
+      priority: "P4",
+    });
+  });
+
+  it("[C3-V1] preserves cents and an approved amount of zero", () => {
+    expect(
+      parseBudgetItemLine("Bolsas de extensão R$ 1.500,50 R$ 0,00 Funcamp P2"),
+    ).toEqual({
+      description: "Bolsas de extensão",
+      estimatedAmountCents: 150_050,
+      approvedAmountCents: 0,
+      fundingSource: "Funcamp",
+      priority: "P2",
+    });
+  });
+
+  it("[C3-V2] parses visual hyphens and a composite source", () => {
     const line =
       "Eletrocalhas -R$ 200.000,00 - -R$ 200.000,00 - Funcamp/Shell P1";
 
@@ -56,7 +80,7 @@ describe("parseBudgetItemLine", () => {
     });
   });
 
-  it("parses a priority containing spaces", () => {
+  it("[C3-V2] parses a priority containing spaces", () => {
     const line =
       "Cabeamento estruturado -R$ 130.000,00 - -R$ 130.000,00 - Unicamp Bloqueio Judicial";
 
@@ -69,14 +93,36 @@ describe("parseBudgetItemLine", () => {
     });
   });
 
-  it("ignores subtotal lines", () => {
+  it("[C3-I1] ignores subtotal lines", () => {
     const line = "Subtotal -R$ 84.200,00 - -R$ 84.200,00 -";
 
     expect(parseBudgetItemLine(line)).toBeNull();
   });
 
-  it("ignores page markers", () => {
+  it("[C3-I1] ignores page markers", () => {
     expect(parseBudgetItemLine("-- 1 of 7 --")).toBeNull();
+  });
+
+  it("[C3-I1] ignores section headings", () => {
+    expect(parseBudgetItemLine("INFORMÁTICA")).toBeNull();
+  });
+
+  it.each([
+    [
+      "an unknown funding source",
+      "Aquisição de GPUs R$ 10.000,00 R$ 8.500,00 OutraFonte P4",
+    ],
+    [
+      "an unsupported priority",
+      "Aquisição de GPUs R$ 10.000,00 R$ 8.500,00 DEPI P5",
+    ],
+    ["a missing approved amount", "Aquisição de GPUs R$ 10.000,00 DEPI P4"],
+    [
+      "a malformed estimated amount",
+      "Aquisição de GPUs R$ 10.000 R$ 8.500,00 DEPI P4",
+    ],
+  ])("[C3-I2] ignores %s", (_description, line) => {
+    expect(parseBudgetItemLine(line)).toBeNull();
   });
 });
 
