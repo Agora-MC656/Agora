@@ -56,9 +56,9 @@ describe("validateRegistration", () => {
     ] as const)(
       "retorna erro de campos obrigatórios quando $field está vazio ou é zero",
       ({ field, value }) => {
-        expect(
-          runValidation({ [field]: value } as Partial<UserRegistration>),
-        ).toBe("All fields are required");
+        expect(runValidation({ [field]: value })).toBe(
+          "All fields are required",
+        );
       },
     );
 
@@ -67,9 +67,9 @@ describe("validateRegistration", () => {
     });
 
     it("rejeita gênero fora do conjunto permitido", () => {
-      expect(
-        runValidation({ gender: "unknown" as UserRegistration["gender"] }),
-      ).toBe("Gender must be male, female, or other");
+      expect(runValidation({ gender: "unknown" })).toBe(
+        "Gender must be male, female, or other",
+      );
     });
 
     it("rejeita e-mail sem o símbolo @", () => {
