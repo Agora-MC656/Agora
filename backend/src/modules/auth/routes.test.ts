@@ -168,14 +168,15 @@ describe("POST /auth/login controller flows", () => {
       body: { name_email: "test@unicamp.br", passwordPlain: "password123" },
     } as Parameters<typeof handleLogin>[0];
 
-    const res = {
-      status: vi.fn().mockReturnThis(),
-      json: vi.fn(),
-    } as unknown as Parameters<typeof handleLogin>[1];
+    const status = vi.fn().mockReturnThis();
+    const json = vi.fn();
+    const res = { status, json } as unknown as Parameters<
+      typeof handleLogin
+    >[1];
 
     await handleLogin(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ error: "Login failed" });
+    expect(status).toHaveBeenCalledWith(401);
+    expect(json).toHaveBeenCalledWith({ error: "Login failed" });
   });
 });
