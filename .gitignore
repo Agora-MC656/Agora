@@ -15,3 +15,7 @@ coverage/
 # Local HTTPS certificates
 backend/certs/*
 !backend/certs/.gitkeep
+
+# Teste de mutação (Stryker)
+backend/reports/
+.stryker-tmp/
