@@ -10,7 +10,8 @@
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest",
-    "inspect:budget-pdf": "tsx src/scripts/inspect-ic-budget-pdf.ts"
+    "inspect:budget-pdf": "tsx src/scripts/inspect-ic-budget-pdf.ts",
+    "test:mutation": "stryker run"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.72",
@@ -24,6 +25,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@stryker-mutator/core": "^10.1.1",
+    "@stryker-mutator/vitest-runner": "^10.1.1",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
