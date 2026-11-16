@@ -167,4 +167,56 @@ describe("parseIcBudgetProposal2020", () => {
       approvedAmountCents: 13_000_000,
     });
   });
+
+  it("keeps each academic item under the subsection where it appears", () => {
+    const text = readFileSync(fixtureUrl, "utf8");
+
+    const academicItems = parseIcBudgetProposal2020(text)
+      .filter(({ section }) => section === "Atividades Acadêmicas")
+      .map(({ subsection, description }) => [subsection, description]);
+
+    expect(academicItems).toEqual([
+      ["Pós-graduação", "Seguro Internacional"],
+      ["Pós-graduação", "Transporte Pós Graduação"],
+      ["Pós-graduação", "Hospedagem Pós Graduação"],
+      ["Pós-graduação", "WTD"],
+      ["Graduação", "UPA"],
+      ["Graduação", "PIBIC - Impressão de posters"],
+      ["Graduação", "Olimpíada e Maratonas"],
+      ["Atividades Estudantis Extracurriculares", "Atividades Estudantis"],
+    ]);
+  });
+
+  it("distributes the items among every section and subsection of the proposal", () => {
+    const text = readFileSync(fixtureUrl, "utf8");
+
+    const itemsPerCategory = new Map<string, number>();
+    for (const { section, subsection } of parseIcBudgetProposal2020(text)) {
+      const category = `${section} > ${subsection ?? "-"}`;
+      itemsPerCategory.set(category, (itemsPerCategory.get(category) ?? 0) + 1);
+    }
+
+    expect(Object.fromEntries(itemsPerCategory)).toEqual({
+      "Informática > Parque Computacional": 9,
+      "Informática > Infraestrutura": 4,
+      "Informática > Apoio ao Ensino": 3,
+      "Apoio Operacional > Geral": 5,
+      "Apoio Operacional > Contratos": 4,
+      "Apoio Operacional > Projetos/Obras": 11,
+      "Obras/Reformas/Serviços Especializados > IC 01/02": 6,
+      "Obras/Reformas/Serviços Especializados > IC 03/3,5": 5,
+      "Obras/Reformas/Serviços Especializados > Manutenção IC-03/3,5": 9,
+      "Obras/Reformas/Serviços Especializados > Data Center": 4,
+      "Obras/Reformas/Serviços Especializados > Investimento em salas de aula": 5,
+      "Obras/Reformas/Serviços Especializados > Manutenção em salas de aula": 2,
+      "Obras/Reformas/Serviços Especializados > IC 4": 10,
+      "Institucional > Geral": 6,
+      "Institucional > DESPESAS CENTRALIZADAS": 6,
+      "Atividades Acadêmicas > Pós-graduação": 4,
+      "Atividades Acadêmicas > Graduação": 3,
+      "Atividades Acadêmicas > Atividades Estudantis Extracurriculares": 1,
+      "Adiantamento > -": 2,
+      "Aportes Específicos > -": 4,
+    });
+  });
 });
