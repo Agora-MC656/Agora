@@ -8,12 +8,30 @@ export interface BudgetProposalExtraction {
 }
 
 export class BudgetProposalService {
+  private readonly pendingProposals = new Map<
+    number,
+    Promise<BudgetProposal>
+  >();
+
   constructor(
     private readonly repository: BudgetProposalRepository,
     private readonly extractor: BudgetProposalExtraction,
   ) {}
 
-  async getIcBudgetProposal(year: number): Promise<BudgetProposal> {
+  getIcBudgetProposal(year: number): Promise<BudgetProposal> {
+    const pending = this.pendingProposals.get(year);
+    if (pending) {
+      return pending;
+    }
+
+    const proposal = this.findOrExtract(year).finally(() => {
+      this.pendingProposals.delete(year);
+    });
+    this.pendingProposals.set(year, proposal);
+    return proposal;
+  }
+
+  private async findOrExtract(year: number): Promise<BudgetProposal> {
     const cachedProposal = await this.repository.findByInstitutionAndYear(
       IC_INSTITUTION,
       year,
