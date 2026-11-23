@@ -75,7 +75,9 @@ export type VotingResult = {
   totalVotes: number;
 };
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+const API_BASE_URL =
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ??
+  "";
 
 export class ApiError extends Error {
   constructor(
@@ -87,10 +89,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("agora-auth-token");
   const headers = new Headers(options.headers);
 
@@ -118,13 +117,27 @@ async function request<T>(
   const data: unknown = await response.json().catch(() => null);
   if (!response.ok) {
     const message =
-      data && typeof data === "object" && "error" in data && typeof data.error === "string"
+      data &&
+      typeof data === "object" &&
+      "error" in data &&
+      typeof data.error === "string"
         ? data.error
-        : data && typeof data === "object" && "message" in data && typeof data.message === "string"
+        : data &&
+            typeof data === "object" &&
+            "message" in data &&
+            typeof data.message === "string"
           ? data.message
-          : response.status === 502
-            ? "O servidor intermediário não conseguiu alcançar o backend. Inicie o backend e tente novamente."
-            : `Erro na requisicao (${response.status})`;
+          : response.status === 400
+            ? "Os dados informados para o login são inválidos."
+            : response.status === 401
+              ? "Nome, e-mail ou senha incorretos."
+              : response.status === 429
+                ? "Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente."
+                : response.status === 500
+                  ? "Não foi possível processar o login. Tente novamente."
+                  : response.status === 502
+                    ? "O servidor intermediário não conseguiu alcançar o backend. Inicie o backend e tente novamente."
+                    : `Erro na requisicao (${response.status})`;
     throw new ApiError(message, response.status);
   }
 
