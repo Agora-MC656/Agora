@@ -7,9 +7,8 @@ import App from "./App";
 import { AuthProvider } from "./AuthContext";
 
 vi.mock("./services/api", async () => {
-  const actual = await vi.importActual<typeof import("./services/api")>(
-    "./services/api",
-  );
+  const actual =
+    await vi.importActual<typeof import("./services/api")>("./services/api");
   return {
     ...actual,
     authApi: {
@@ -110,16 +109,12 @@ describe("Fluxo de autenticação", () => {
       "maria@unicamp.br",
     );
     await user.type(screen.getByLabelText("Senha"), "segura123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
 
     expect(
       await screen.findByText("Olá, maria@unicamp.br"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Sair" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sair" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Sair" }));
     expect(screen.getByRole("link", { name: "Entrar" })).toBeInTheDocument();
@@ -155,9 +150,7 @@ describe("Fluxo de autenticação", () => {
 
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.type(screen.getByLabelText("Senha"), "incorreta");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Nome, e-mail ou senha incorretos.",
@@ -174,9 +167,7 @@ describe("Fluxo de autenticação", () => {
 
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Credenciais rejeitadas.",
@@ -194,9 +185,11 @@ describe("Fluxo de autenticação", () => {
     await user.type(screen.getByLabelText("Idade"), "0");
     await user.selectOptions(screen.getByLabelText("Gênero"), "female");
     await user.type(screen.getByLabelText("Senha"), "123");
-    const submitButton = screen.getAllByRole("button", {
-      name: "Cadastrar",
-    }).at(-1)!;
+    const submitButton = screen
+      .getAllByRole("button", {
+        name: "Cadastrar",
+      })
+      .at(-1)!;
     fireEvent.submit(submitButton.closest("form")!);
 
     expect(
@@ -215,9 +208,7 @@ describe("Fluxo de autenticação", () => {
 
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Informe o nome ou e-mail e a senha.",
     );
@@ -226,9 +217,7 @@ describe("Fluxo de autenticação", () => {
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.clear(screen.getByLabelText("Senha"));
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Muitas tentativas",
     );
@@ -237,9 +226,7 @@ describe("Fluxo de autenticação", () => {
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.clear(screen.getByLabelText("Senha"));
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Não foi possível processar o login.",
     );
@@ -257,9 +244,11 @@ describe("Fluxo de autenticação", () => {
     await user.selectOptions(screen.getByLabelText("Gênero"), "female");
     await user.type(screen.getByLabelText("Senha"), "segura123");
 
-    const submitButton = screen.getAllByRole("button", {
-      name: "Cadastrar",
-    }).at(-1)!;
+    const submitButton = screen
+      .getAllByRole("button", {
+        name: "Cadastrar",
+      })
+      .at(-1)!;
     fireEvent.submit(submitButton.closest("form")!);
     expect(
       await screen.findByText("Informe um e-mail válido."),
@@ -285,9 +274,7 @@ describe("Fluxo de autenticação", () => {
 
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Servidor indisponível",
     );
@@ -296,9 +283,7 @@ describe("Fluxo de autenticação", () => {
     await user.type(screen.getByLabelText("Nome ou e-mail"), "alguem");
     await user.clear(screen.getByLabelText("Senha"));
     await user.type(screen.getByLabelText("Senha"), "senha123");
-    await user.click(
-      screen.getAllByRole("button", { name: "Entrar" }).at(-1)!,
-    );
+    await user.click(screen.getAllByRole("button", { name: "Entrar" }).at(-1)!);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Não foi possível alcançar o backend",
     );

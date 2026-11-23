@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  ApiError,
   authApi,
   generateAgenda,
   getIcBudgetProposal,
@@ -9,7 +8,11 @@ import {
   votingApi,
 } from "./api";
 
-function mockResponse(status: number, body: unknown, ok = status >= 200 && status < 300) {
+function mockResponse(
+  status: number,
+  body: unknown,
+  ok = status >= 200 && status < 300,
+) {
   return {
     ok,
     status,
@@ -25,9 +28,9 @@ describe("camada de API", () => {
 
   it("envia JSON e o token de autenticação", async () => {
     localStorage.setItem("agora-auth-token", "token-teste");
-    const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(200, { success: true, message: "ok" }),
-    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(mockResponse(200, { success: true, message: "ok" }));
     vi.stubGlobal("fetch", fetchMock);
 
     await authApi.login({
@@ -46,9 +49,15 @@ describe("camada de API", () => {
   it("lança ApiError para respostas HTTP com falha", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue(
-        mockResponse(401, { error: "Nome, e-mail ou senha incorretos." }, false),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          mockResponse(
+            401,
+            { error: "Nome, e-mail ou senha incorretos." },
+            false,
+          ),
+        ),
     );
 
     await expect(
@@ -57,7 +66,7 @@ describe("camada de API", () => {
         passwordPlain: "incorreta",
       }),
     ).rejects.toEqual(
-      expect.objectContaining<ApiError>({
+      expect.objectContaining({
         message: "Nome, e-mail ou senha incorretos.",
         status: 401,
       }),
@@ -66,7 +75,14 @@ describe("camada de API", () => {
 
   it("não envia Authorization nem Content-Type sem token ou corpo", async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(200, { institution: "IC", year: 2026, documentType: "budget_proposal", sourceUrl: "", extractedAt: "", items: [] }),
+      mockResponse(200, {
+        institution: "IC",
+        year: 2026,
+        documentType: "budget_proposal",
+        sourceUrl: "",
+        extractedAt: "",
+        items: [],
+      }),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -79,9 +95,9 @@ describe("camada de API", () => {
   });
 
   it("mantém headers personalizados e envia o body do registro", async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(200, { success: true, message: "ok" }),
-    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(mockResponse(200, { success: true, message: "ok" }));
     vi.stubGlobal("fetch", fetchMock);
 
     await authApi.register({
@@ -96,18 +112,30 @@ describe("camada de API", () => {
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe("/auth/register");
     expect(init.method).toBe("POST");
-    expect(JSON.parse(String(init.body))).toMatchObject({
-      name: "Maria",
-      email: "maria@unicamp.br",
-    });
+    expect(init.body).toBe(
+      JSON.stringify({
+        name: "Maria",
+        email: "maria@unicamp.br",
+        institution: "IC",
+        age: 20,
+        gender: "female",
+        passwordPlain: "segura123",
+      }),
+    );
   });
 
   it.each([
     [400, "Os dados informados para o login são inválidos."],
     [401, "Nome, e-mail ou senha incorretos."],
-    [429, "Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente."],
+    [
+      429,
+      "Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente.",
+    ],
     [500, "Não foi possível processar o login. Tente novamente."],
-    [502, "O servidor intermediário não conseguiu alcançar o backend. Inicie o backend e tente novamente."],
+    [
+      502,
+      "O servidor intermediário não conseguiu alcançar o backend. Inicie o backend e tente novamente.",
+    ],
     [418, "Erro na requisicao (418)"],
   ])("usa mensagem padrão para resposta HTTP %i", async (status, message) => {
     vi.stubGlobal(
@@ -120,21 +148,28 @@ describe("camada de API", () => {
         name_email: "maria",
         passwordPlain: "senha",
       }),
-    ).rejects.toMatchObject<ApiError>({ message, status });
+    ).rejects.toMatchObject({ message, status });
   });
 
   it("usa message e error enviados pelo backend", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn()
-        .mockResolvedValueOnce(mockResponse(401, { message: "Mensagem da API" }, false))
-        .mockResolvedValueOnce(mockResponse(401, { error: "Erro da API" }, false)),
+      vi
+        .fn()
+        .mockResolvedValueOnce(
+          mockResponse(401, { message: "Mensagem da API" }, false),
+        )
+        .mockResolvedValueOnce(
+          mockResponse(401, { error: "Erro da API" }, false),
+        ),
     );
 
-    await expect(authApi.login({ name_email: "a", passwordPlain: "b" })).rejects
-      .toMatchObject({ message: "Mensagem da API", status: 401 });
-    await expect(authApi.login({ name_email: "a", passwordPlain: "b" })).rejects
-      .toMatchObject({ message: "Erro da API", status: 401 });
+    await expect(
+      authApi.login({ name_email: "a", passwordPlain: "b" }),
+    ).rejects.toMatchObject({ message: "Mensagem da API", status: 401 });
+    await expect(
+      authApi.login({ name_email: "a", passwordPlain: "b" }),
+    ).rejects.toMatchObject({ message: "Erro da API", status: 401 });
   });
 
   it("converte falha de rede em ApiError com status zero", async () => {
@@ -142,9 +177,10 @@ describe("camada de API", () => {
 
     await expect(
       authApi.login({ name_email: "a", passwordPlain: "b" }),
-    ).rejects.toMatchObject<ApiError>({
+    ).rejects.toMatchObject({
       name: "ApiError",
-      message: "Não foi possível contactar o servidor. Verifique se o backend está em execução na porta 3000.",
+      message:
+        "Não foi possível contactar o servidor. Verifique se o backend está em execução na porta 3000.",
       status: 0,
     });
   });
