@@ -1,6 +1,6 @@
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 import LoginPage from "./pages/LoginPage";
 
 function Layout() {

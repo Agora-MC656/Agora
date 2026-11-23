@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../useAuth";
 import { ApiError, authApi } from "../services/api";
 
 type Mode = "login" | "register";
@@ -194,7 +194,12 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <form className="form-grid" onSubmit={handleSubmit}>
+          <form
+            className="form-grid"
+            onSubmit={(event) => {
+              void handleSubmit(event);
+            }}
+          >
             {mode === "login" ? (
               <>
                 <label>
