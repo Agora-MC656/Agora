@@ -11,7 +11,7 @@ describe("Authentication System - Login", () => {
     const result = await loginUser(credenciais);
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe("User not found");
+    expect(result.message).toBe("Nome, e-mail ou senha incorretos");
   });
 
   it("Must fail when using the wrong password", async () => {
@@ -22,7 +22,7 @@ describe("Authentication System - Login", () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe("Invalid password");
+    expect(result.message).toBe("Nome, e-mail ou senha incorretos");
   });
 
   it("Must login with correct credentials", async () => {
@@ -32,6 +32,6 @@ describe("Authentication System - Login", () => {
     });
 
     expect(result.success).toBe(true);
-    expect(result.message).toBe("User logged in successfully");
+    expect(result.message).toBe("Usuário autenticado com sucesso");
   });
 });

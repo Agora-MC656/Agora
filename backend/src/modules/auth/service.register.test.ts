@@ -25,7 +25,7 @@ describe("registerUser and persistence structural tests", () => {
         ...validUser,
         email: "sem-arroba",
       }),
-    ).rejects.toThrow("Invalid email format");
+    ).rejects.toThrow("Formato de e-mail inválido");
 
     expect(hash).not.toHaveBeenCalled();
   });
@@ -38,7 +38,7 @@ describe("registerUser and persistence structural tests", () => {
 
     expect(result).toEqual({
       success: true,
-      message: "User registered successfully",
+      message: "Usuário cadastrado com sucesso",
     });
     expect(writeSpy).toHaveBeenCalledTimes(1);
   });
@@ -58,7 +58,7 @@ describe("registerUser and persistence structural tests", () => {
     );
 
     await expect(registerUser(validUser)).rejects.toThrow(
-      "User with this name or email already exists",
+      "Já existe uma conta com este nome",
     );
   });
 
@@ -77,7 +77,7 @@ describe("registerUser and persistence structural tests", () => {
     );
 
     await expect(registerUser(validUser)).rejects.toThrow(
-      "User with this name or email already exists",
+      "Já existe uma conta com este e-mail",
     );
   });
 
@@ -110,7 +110,7 @@ describe("registerUser and persistence structural tests", () => {
 
     expect(result).toEqual({
       success: true,
-      message: "User registered successfully",
+      message: "Usuário cadastrado com sucesso",
     });
     expect(consoleSpy).toHaveBeenCalledTimes(2);
   });
@@ -137,7 +137,7 @@ describe("registerUser and persistence structural tests", () => {
 
     expect(result).toEqual({
       success: true,
-      message: "User logged in successfully",
+      message: "Usuário autenticado com sucesso",
     });
   });
 });

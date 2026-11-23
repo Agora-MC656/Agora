@@ -19,7 +19,7 @@ describe("validateRegistration", () => {
   describe("análise dos limites do tamanho da senha", () => {
     it("rejeita senha com 5 caracteres (imediatamente abaixo do limite mínimo)", () => {
       expect(runValidation({ passwordPlain: "12345" })).toBe(
-        "Password must be at least 6 characters long",
+        "A senha deve ter pelo menos 6 caracteres",
       );
     });
 
@@ -33,7 +33,7 @@ describe("validateRegistration", () => {
 
     it("trata senha vazia como campo obrigatório ausente, em vez de senha curta", () => {
       expect(runValidation({ passwordPlain: "" })).toBe(
-        "All fields are required",
+        "Todos os campos são obrigatórios",
       );
     });
   });
@@ -57,24 +57,26 @@ describe("validateRegistration", () => {
       "retorna erro de campos obrigatórios quando $field está vazio ou é zero",
       ({ field, value }) => {
         expect(runValidation({ [field]: value })).toBe(
-          "All fields are required",
+          "Todos os campos são obrigatórios",
         );
       },
     );
 
     it("rejeita idade negativa", () => {
-      expect(runValidation({ age: -1 })).toBe("Age must be a positive number");
+      expect(runValidation({ age: -1 })).toBe(
+        "A idade deve ser um número positivo",
+      );
     });
 
     it("rejeita gênero fora do conjunto permitido", () => {
       expect(runValidation({ gender: "unknown" })).toBe(
-        "Gender must be male, female, or other",
+        "O gênero deve ser masculino, feminino ou outro",
       );
     });
 
     it("rejeita e-mail sem o símbolo @", () => {
       expect(runValidation({ email: "pessoa.unicamp.br" })).toBe(
-        "Invalid email format",
+        "Formato de e-mail inválido",
       );
     });
   });

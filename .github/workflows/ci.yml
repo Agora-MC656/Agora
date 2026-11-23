@@ -52,6 +52,9 @@ jobs:
       - name: Executar os testes com cobertura
         run: npm run test:coverage
 
+      - name: Executar os testes do frontend com cobertura
+        run: npm run test:coverage --workspace frontend
+
       - name: Analisar com SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@v8.3.0
         env:
@@ -62,6 +65,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cobertura-${{ github.sha }}
-          path: backend/coverage/
+          path: |
+            backend/coverage/
+            frontend/coverage/
           if-no-files-found: warn
           retention-days: 14

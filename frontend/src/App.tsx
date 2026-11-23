@@ -1,102 +1,93 @@
-import { useState, type FormEvent } from "react";
+import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
-type Agenda = { title: string; items: string[] };
+import { useAuth } from "./useAuth";
+import LoginPage from "./pages/LoginPage";
 
-export default function App() {
-  const [context, setContext] = useState("");
-  const [agenda, setAgenda] = useState<Agenda | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoading(true);
-    setError("");
-    setAgenda(null);
-
-    try {
-      const response = await fetch("/api/agenda", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ context }),
-      });
-      const result: unknown = await response.json();
-
-      if (!response.ok) {
-        const message =
-          result &&
-          typeof result === "object" &&
-          "error" in result &&
-          typeof result.error === "string"
-            ? result.error
-            : "Não foi possível gerar a pauta.";
-        throw new Error(message);
-      }
-
-      setAgenda(result as Agenda);
-    } catch (cause) {
-      setError(
-        cause instanceof Error
-          ? cause.message
-          : "Não foi possível gerar a pauta.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
+function Layout() {
+  const { user, logout } = useAuth();
 
   return (
-    <main className="mx-auto max-w-2xl p-6">
-      <h1 className="mb-2 text-3xl font-bold">Gerador de pautas</h1>
-      <p className="mb-6 text-gray-600">
-        Descreva o tema ou objetivo da reunião para organizar os pontos de
-        discussão.
-      </p>
-
-      <form
-        onSubmit={(event) => {
-          void handleSubmit(event);
-        }}
-        className="space-y-3"
-      >
-        <label htmlFor="context" className="block font-medium">
-          Tema ou contexto
-        </label>
-        <textarea
-          id="context"
-          value={context}
-          onChange={(event) => setContext(event.target.value)}
-          maxLength={500}
-          required
-          rows={5}
-          className="w-full rounded border border-gray-300 p-3"
-          placeholder="Ex.: decidir as prioridades do orçamento do próximo semestre"
-        />
-        <button
-          type="submit"
-          disabled={loading || !context.trim()}
-          className="rounded bg-blue-700 px-4 py-2 text-white disabled:opacity-50"
-        >
-          {loading ? "Gerando..." : "Gerar pauta"}
-        </button>
-      </form>
-
-      {error && (
-        <p role="alert" className="mt-4 text-red-700">
-          {error}
-        </p>
-      )}
-
-      {agenda && (
-        <section className="mt-8" aria-label="Pauta gerada">
-          <h2 className="mb-3 text-2xl font-semibold">{agenda.title}</h2>
-          <ol className="list-decimal space-y-2 pl-6">
-            {agenda.items.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ol>
-        </section>
-      )}
-    </main>
+    <div className="app-shell">
+      <nav className="navbar" aria-label="Navegacao principal">
+        <NavLink className="brand" to="/">
+          Ágora — IC/UNICAMP
+        </NavLink>
+        <div className="nav-links">
+          <NavLink to="/">Início</NavLink>
+          <NavLink to="/orcamento">Orçamento</NavLink>
+          <NavLink to="/votacao">Votação</NavLink>
+          <NavLink to="/debate">Debate</NavLink>
+          {user ? (
+            <>
+              <span className="session-status">Olá, {user.nameEmail}</span>
+              <button type="button" onClick={logout}>
+                Sair
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login">Entrar</NavLink>
+          )}
+        </div>
+      </nav>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/orcamento" element={<OrcamentoPage />} />
+          <Route path="/votacao" element={<VotacaoPage />} />
+          <Route path="/debate" element={<DebatePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
+
+function HomePage() {
+  return (
+    <section className="page-card">
+      <h1>Ágora — participação acadêmica no IC/UNICAMP</h1>
+      <p>
+        O Ágora aproxima a comunidade do Instituto de Computação para acompanhar
+        o orçamento, participar de pautas e compartilhar opiniões públicas.
+      </p>
+      <div className="home-actions">
+        <NavLink to="/orcamento">Consultar orçamento IC</NavLink>
+        <NavLink to="/votacao">Acompanhar pautas e votar</NavLink>
+        <NavLink to="/debate">Explorar opinião pública</NavLink>
+      </div>
+    </section>
+  );
+}
+
+function OrcamentoPage() {
+  return (
+    <section className="placeholder-card">
+      {/* TODO: Integrante 2 - Orçamento IC */}
+      <h1>Orçamento IC</h1>
+      <p>Espaço reservado para a consulta e visualização do orçamento do IC.</p>
+    </section>
+  );
+}
+
+function VotacaoPage() {
+  return (
+    <section className="placeholder-card">
+      {/* TODO: Integrante 3 - Pautas e Votação */}
+      <h1>Pautas e Votação</h1>
+      <p>Espaço reservado para pautas, registro e apuração de votos.</p>
+    </section>
+  );
+}
+
+function DebatePage() {
+  return (
+    <section className="placeholder-card">
+      {/* TODO: Integrante 4 - Opinião Pública / Gorilla */}
+      <h1>Opinião Pública</h1>
+      <p>Espaço reservado para buscas e resultados do Gorilla.</p>
+    </section>
+  );
+}
+
+export default Layout;

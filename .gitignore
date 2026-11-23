@@ -18,4 +18,5 @@ backend/certs/*
 
 # Teste de mutação (Stryker)
 backend/reports/
+frontend/reports/
 .stryker-tmp/

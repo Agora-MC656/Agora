@@ -11,23 +11,23 @@ export function validateRegistration(data: UserRegistration): string | null {
   const { name, email, institution, age, gender, passwordPlain } = data;
 
   if (!name || !email || !institution || !age || !gender || !passwordPlain) {
-    return "All fields are required";
+    return "Todos os campos são obrigatórios";
   }
 
   if (age < 0) {
-    return "Age must be a positive number";
+    return "A idade deve ser um número positivo";
   }
 
   if (passwordPlain.length < MIN_PASSWORD_LENGTH) {
-    return "Password must be at least 6 characters long";
+    return "A senha deve ter pelo menos 6 caracteres";
   }
 
   if (!ALLOWED_GENDERS.includes(gender.toLowerCase())) {
-    return "Gender must be male, female, or other";
+    return "O gênero deve ser masculino, feminino ou outro";
   }
 
   if (!email.includes("@")) {
-    return "Invalid email format";
+    return "Formato de e-mail inválido";
   }
 
   return null;
