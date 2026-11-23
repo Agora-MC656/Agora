@@ -16,7 +16,7 @@ Projeto da Disciplina MC656 - Engenharia de Software, orientado pelo Professor B
 
 ```text
 .
-├── backend/   # Node.js, TypeScript, Express, HTTPS e Vitest
+├── backend/   # Node.js, TypeScript, Express, HTTP e Vitest
 └── frontend/  # React, TypeScript, Vite e Tailwind CSS
 ```
 
@@ -28,14 +28,10 @@ Instale as dependências a partir da raiz:
 npm install
 ```
 
-Para executar o backend localmente, crie os certificados HTTPS e o arquivo de ambiente:
+Para executar o backend localmente, crie o arquivo de ambiente:
 
 ```bash
 cp backend/.env.example backend/.env
-openssl req -x509 -newkey rsa:2048 -nodes \
-  -keyout backend/certs/localhost-key.pem \
-  -out backend/certs/localhost-cert.pem \
-  -days 365 -subj "/CN=localhost"
 ```
 
 Inicie os dois projetos:
@@ -44,7 +40,7 @@ Inicie os dois projetos:
 npm run dev
 ```
 
-O frontend será servido em `http://localhost:5173` e o backend em `https://localhost:3000`.
+O frontend será servido em `http://localhost:5173` e o backend em `http://localhost:3000`.
 
 ## Gerador de pautas
 
@@ -59,7 +55,7 @@ retorna um título e uma lista de pontos para discussão. A integração usa o m
 A rota também pode ser chamada diretamente:
 
 ```bash
-curl -k -X POST https://localhost:3000/api/agenda \
+curl -X POST http://localhost:3000/api/agenda \
   -H "Content-Type: application/json" \
   -d '{"context": "prioridades do orçamento do próximo semestre"}'
 ```
@@ -73,7 +69,7 @@ que é suficiente enquanto o armazenamento definitivo não é definido.
 Registrar um voto (`sim` ou `nao`):
 
 ```bash
-curl -k -X POST https://localhost:3000/voting/proposals/orcamento-2026/votes \
+curl -X POST http://localhost:3000/voting/proposals/orcamento-2026/votes \
   -H "Content-Type: application/json" \
   -d '{"voterId": "ana", "option": "sim"}'
 ```
@@ -81,7 +77,7 @@ curl -k -X POST https://localhost:3000/voting/proposals/orcamento-2026/votes \
 Consultar a apuração de uma pauta:
 
 ```bash
-curl -k https://localhost:3000/voting/proposals/orcamento-2026/results
+curl http://localhost:3000/voting/proposals/orcamento-2026/results
 ```
 
 | Método | Rota                                    | Respostas                                                                |
@@ -142,16 +138,16 @@ npm run test:coverage
    Você pode passar o termo de busca diretamente na URL (recomendado para Windows PowerShell):
 
    ```powershell
-   curl.exe -k -X POST "https://localhost:3000/api/gorilla/fetch?query=Gremio"
+   curl.exe -X POST "http://localhost:3000/api/gorilla/fetch?query=Gremio"
    ```
 
    Ou sem parâmetros (usará o tema padrão `"orçamento participativo"`):
 
    ```powershell
-   curl.exe -k -X POST https://localhost:3000/api/gorilla/fetch
+   curl.exe -X POST http://localhost:3000/api/gorilla/fetch
    ```
 
 4. **Ler os dados retornados e cacheados (GET):**
    ```powershell
-   curl.exe -k https://localhost:3000/api/gorilla
+   curl.exe http://localhost:3000/api/gorilla
    ```

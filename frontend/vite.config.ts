@@ -6,10 +6,21 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      "/api": {
-        target: "https://localhost:3000",
+      "/auth": {
+        target: "http://localhost:3000",
         changeOrigin: true,
-        secure: false,
+      },
+      "/budget-proposals": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+      "/voting": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
       },
     },
   },
