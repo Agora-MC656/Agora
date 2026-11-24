@@ -1,6 +1,7 @@
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./useAuth";
+import DebatePage from "./pages/DebatePage";
 import LoginPage from "./pages/LoginPage";
 
 function Layout() {
@@ -76,16 +77,6 @@ function VotacaoPage() {
       {/* TODO: Integrante 3 - Pautas e Votação */}
       <h1>Pautas e Votação</h1>
       <p>Espaço reservado para pautas, registro e apuração de votos.</p>
-    </section>
-  );
-}
-
-function DebatePage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 4 - Opinião Pública / Gorilla */}
-      <h1>Opinião Pública</h1>
-      <p>Espaço reservado para buscas e resultados do Gorilla.</p>
     </section>
   );
 }
