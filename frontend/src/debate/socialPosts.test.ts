@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { SocialPost } from "../services/api";
 import {
   countBySource,
+  decodeHtmlEntities,
   filterPosts,
   formatPostDate,
   snippetRepeatsTitle,
@@ -135,6 +136,22 @@ describe("snippetRepeatsTitle", () => {
     ).toBe(false);
     expect(snippetRepeatsTitle(post({ title: " ", body_snippet: "x" }))).toBe(
       false,
+    );
+  });
+});
+
+describe("decodeHtmlEntities", () => {
+  it("converte as entidades HTML mais comuns", () => {
+    expect(
+      decodeHtmlEntities(
+        "Português &amp; English &quot;IC&quot; &#39;x&#39; &lt;b&gt;",
+      ),
+    ).toBe(`Português & English "IC" 'x' <b>`);
+  });
+
+  it("mantém o texto sem entidades", () => {
+    expect(decodeHtmlEntities("Sem entidades & tal")).toBe(
+      "Sem entidades & tal",
     );
   });
 });

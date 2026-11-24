@@ -13,6 +13,22 @@ const SOURCE_LABELS: Readonly<Record<string, string>> = {
   youtube: "YouTube",
 };
 
+const HTML_ENTITIES: Readonly<Record<string, string>> = {
+  "&amp;": "&",
+  "&quot;": '"',
+  "&#39;": "'",
+  "&lt;": "<",
+  "&gt;": ">",
+};
+
+/** Algumas fontes (como o YouTube) devolvem títulos com entidades HTML escapadas. */
+export function decodeHtmlEntities(text: string): string {
+  return text.replace(
+    /&(?:amp|quot|#39|lt|gt);/g,
+    (entity) => HTML_ENTITIES[entity] ?? entity,
+  );
+}
+
 export function sourceLabel(source: string): string {
   return SOURCE_LABELS[source] ?? source;
 }

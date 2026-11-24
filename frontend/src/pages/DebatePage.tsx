@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 
 import {
   countBySource,
+  decodeHtmlEntities,
   filterPosts,
   formatPostDate,
   snippetRepeatsTitle,
@@ -245,8 +246,8 @@ function PostCard({ post }: { post: SocialPost }) {
         <span>{post.author}</span>
         {date && <span>{date}</span>}
       </div>
-      {showTitle && <h3>{post.title}</h3>}
-      <p className="post-snippet">{post.body_snippet}</p>
+      {showTitle && <h3>{decodeHtmlEntities(post.title)}</h3>}
+      <p className="post-snippet">{decodeHtmlEntities(post.body_snippet)}</p>
       <div className="post-footer">
         {post.score !== undefined && <span>{post.score} reações</span>}
         {post.num_comments !== undefined && (
