@@ -1,6 +1,7 @@
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./useAuth";
+import DebatePage from "./pages/DebatePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
@@ -43,16 +44,6 @@ function Layout() {
         </Routes>
       </main>
     </div>
-  );
-}
-
-function DebatePage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 4 - Opinião Pública / Gorilla */}
-      <h1>Opinião Pública</h1>
-      <p>Espaço reservado para buscas e resultados do Gorilla.</p>
-    </section>
   );
 }
 

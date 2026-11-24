@@ -52,6 +52,7 @@ export type SocialPost = {
 export type SocialSearchResults = {
   search_id: string;
   status: string;
+  query?: string;
   total?: number;
   results: SocialPost[];
 };
