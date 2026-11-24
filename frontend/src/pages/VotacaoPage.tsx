@@ -59,6 +59,9 @@ export default function VotacaoPage() {
 
   return (
     <section className="page-card voting-page">
+      <p className="eyebrow">
+        <span className="accent">02 · Votação</span> · Consulta consultiva
+      </p>
       <h1>Pautas e Votação</h1>
       <p className="page-lead">
         Consulta consultiva sobre prioridades do orçamento do IC. O resultado

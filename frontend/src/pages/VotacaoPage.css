@@ -1,126 +1,212 @@
-.voting-page h1 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.voting-page .page-lead {
-  color: #465268;
-}
+/* ---------- Regras ---------- */
 
 .voting-page .rules {
-  margin-top: 1.25rem;
-  border: 1px solid #dde4ef;
-  border-radius: 0.75rem;
-  background: #f8faff;
-  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.1rem 0;
+}
+
+@media (min-width: 760px) {
+  .voting-page .rules {
+    grid-template-columns: 12rem 1fr;
+    gap: 2rem;
+    align-items: baseline;
+  }
 }
 
 .voting-page .rules h2 {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 .voting-page .rules ul {
   display: grid;
-  gap: 0.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 0.6rem 2rem;
   margin: 0;
-  padding-left: 1.2rem;
-  list-style: disc;
-  color: #344054;
+  padding: 0;
+  list-style: none;
+  counter-reset: regra;
+}
+
+.voting-page .rules li {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.93rem;
+  line-height: 1.45;
+  color: var(--dim);
+  counter-increment: regra;
+}
+
+.voting-page .rules li::before {
+  content: counter(regra, decimal-leading-zero);
+  flex: none;
+  padding-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--faint);
 }
 
 .voting-page .feedback a {
-  color: #1746a2;
-  font-weight: 700;
-  text-decoration: underline;
+  font-weight: 600;
 }
 
 .voting-page .feedback button {
   margin-top: 0.75rem;
 }
 
+/* ---------- Pautas ---------- */
+
 .voting-page .proposal-list {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  counter-reset: pauta;
 }
 
 .voting-page .proposal-card {
-  border: 1px solid #dde4ef;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 3rem;
+  align-content: start;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--bg);
+  counter-increment: pauta;
+  transition: background-color 0.2s;
 }
 
-.voting-page .proposal-card h2 {
-  margin: 0.25rem 0 0.5rem;
-  font-size: 1.15rem;
-  font-weight: 700;
+.voting-page .proposal-card > * + * {
+  margin-top: 0.9rem;
 }
 
-.voting-page .proposal-card > p {
-  margin: 0 0 0.75rem;
-  color: #344054;
+.voting-page .proposal-card + .proposal-card {
+  border-top: 1px solid var(--line);
+}
+
+.voting-page .proposal-card:hover {
+  background: var(--panel);
+}
+
+@media (min-width: 900px) {
+  .voting-page .proposal-card {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-rows: repeat(5, auto);
+  }
+
+  .voting-page .proposal-card > * {
+    grid-column: 1;
+  }
+
+  .voting-page .proposal-card > .result {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    margin-top: 0;
+  }
 }
 
 .voting-page .budget-reference {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #1746a2;
+  margin-bottom: 0;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
   text-transform: uppercase;
+  color: var(--faint);
 }
+
+.voting-page .budget-reference::before {
+  content: "Pauta " counter(pauta, decimal-leading-zero) " · ";
+  color: var(--accent);
+}
+
+.voting-page .proposal-card h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.voting-page .proposal-card > p:not(.budget-reference):not(.feedback) {
+  margin-bottom: 0;
+  max-width: 56ch;
+  color: var(--dim);
+}
+
+/* ---------- Apuração ---------- */
 
 .voting-page .result {
   display: grid;
-  gap: 0.4rem;
-  margin: 1rem 0;
+  gap: 0.75rem;
+  border-left: 1px solid var(--line);
+  padding-left: clamp(0rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 899px) {
+  .voting-page .result {
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+    padding: 0.9rem 0 0;
+  }
 }
 
 .voting-page .result-total {
   margin: 0;
-  font-size: 0.85rem;
-  color: #667085;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
 }
 
 .voting-page .result-row {
   display: grid;
-  grid-template-columns: 3rem 1fr 6rem;
+  grid-template-columns: 2.5rem 1fr 5.5rem;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9rem;
 }
 
 .voting-page .result-label {
-  font-weight: 700;
+  font-weight: 680;
+  letter-spacing: -0.01em;
 }
 
 .voting-page .result-track {
-  height: 0.75rem;
-  border-radius: 999px;
-  background: #eef2f8;
+  height: 0.5rem;
+  background: var(--line-2);
   overflow: hidden;
 }
 
 .voting-page .result-bar {
   height: 100%;
-  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 .voting-page .result-bar.sim {
-  background: #1d7041;
+  background: var(--fg);
 }
 
 .voting-page .result-bar.nao {
-  background: #a12828;
+  background: #b9b2a2;
 }
 
 .voting-page .result-value {
   text-align: right;
+  font-family: var(--mono);
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
-  color: #465268;
+  color: var(--dim);
 }
+
+/* ---------- Ações de voto ---------- */
 
 .voting-page .vote-actions {
   display: flex;
@@ -128,27 +214,15 @@
   gap: 0.5rem;
 }
 
-.voting-page .secondary-button {
-  border: 1px solid #1746a2;
-  border-radius: 0.55rem;
-  background: #ffffff;
-  color: #1746a2;
-  padding: 0.65rem 1rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.voting-page .secondary-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
 .voting-page .confirm-box {
-  border-radius: 0.55rem;
-  background: #edf3ff;
-  padding: 0.9rem;
+  display: grid;
+  gap: 0.85rem;
+  border-left: 2px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 1rem 1.1rem;
 }
 
 .voting-page .confirm-box p {
-  margin: 0 0 0.75rem;
+  margin: 0;
+  color: var(--fg);
 }
