@@ -2,6 +2,7 @@ import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./useAuth";
 import LoginPage from "./pages/LoginPage";
+import OrcamentoPage from "./pages/OrcamentoPage";
 import VotacaoPage from "./pages/VotacaoPage";
 
 function Layout() {
@@ -57,16 +58,6 @@ function HomePage() {
         <NavLink to="/votacao">Acompanhar pautas e votar</NavLink>
         <NavLink to="/debate">Explorar opinião pública</NavLink>
       </div>
-    </section>
-  );
-}
-
-function OrcamentoPage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 2 - Orçamento IC */}
-      <h1>Orçamento IC</h1>
-      <p>Espaço reservado para a consulta e visualização do orçamento do IC.</p>
     </section>
   );
 }
