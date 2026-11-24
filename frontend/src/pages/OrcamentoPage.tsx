@@ -244,7 +244,8 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
         </label>
       </div>
       <p className="muted" aria-live="polite">
-        {visibleTotals.itemCount} itens, somando{" "}
+        {visibleTotals.itemCount}{" "}
+        {visibleTotals.itemCount === 1 ? "item" : "itens"}, somando{" "}
         {formatCurrency(visibleTotals.approvedCents)} aprovados.
       </p>
 

@@ -132,7 +132,7 @@ describe("OrcamentoPage", () => {
     expect(
       screen.getByRole("cell", { name: "Olimpíada e Maratonas" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/1 itens, somando R\$ 4\.000,00/)).toBeVisible();
+    expect(screen.getByText(/1 item, somando R\$ 4\.000,00/)).toBeVisible();
 
     await user.type(screen.getByLabelText("Buscar item"), "servidores");
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
