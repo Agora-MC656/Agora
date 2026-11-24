@@ -204,18 +204,17 @@ export default function DebatePage() {
       >
         <h2>Nova busca no Gorilla</h2>
         <p className="muted">
-          Busca um tema nas redes e substitui os resultados salvos. Descreva a
-          conversa que você procura, por exemplo “estudantes comentando a
-          infraestrutura do IC”. A busca pode levar até 3 minutos, exige a
-          variável <code>GORILLA_API_KEY</code> no backend e consome créditos da
-          API.
+          Busca um tema nas redes e substitui os resultados salvos. Termos
+          curtos e específicos funcionam melhor, como “orçamento Unicamp” ou
+          “greve Unicamp”. A busca pode levar até 3 minutos, exige a variável{" "}
+          <code>GORILLA_API_KEY</code> no backend e consome créditos da API.
         </p>
         <div className="new-search-row">
           <label>
             Tema da busca
             <input
               value={newQuery}
-              placeholder="Ex.: Unicamp orçamento"
+              placeholder="Ex.: orçamento Unicamp"
               onChange={(event) => setNewQuery(event.target.value)}
             />
           </label>
