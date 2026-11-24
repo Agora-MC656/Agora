@@ -203,7 +203,9 @@ export default function DebatePage() {
       >
         <h2>Nova busca no Gorilla</h2>
         <p className="muted">
-          Busca um tema nas redes e substitui os resultados salvos. Exige a
+          Busca um tema nas redes e substitui os resultados salvos. Descreva a
+          conversa que você procura, por exemplo “estudantes comentando a
+          infraestrutura do IC”. A busca pode levar até 3 minutos, exige a
           variável <code>GORILLA_API_KEY</code> no backend e consome créditos da
           API.
         </p>
@@ -217,7 +219,7 @@ export default function DebatePage() {
             />
           </label>
           <button type="submit" className="primary-button" disabled={searching}>
-            {searching ? "Buscando..." : "Buscar"}
+            {searching ? "Buscando... (até 3 minutos)" : "Buscar"}
           </button>
         </div>
         {searchError && (

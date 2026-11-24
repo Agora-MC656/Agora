@@ -7,6 +7,17 @@ import type { SocialSearchProvider } from "./social-search.provider.js";
 
 export const GORILLA_SEARCH_URL = "https://usegorilla.app/v1/v2-search-stream";
 
+/** Sem um User-Agent de navegador, o Cloudflare da API pode recusar a requisição (erro 1010). */
+export const BROWSER_USER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36";
+
+/** Parâmetros da busca: últimos 90 dias, até 50 conversas, ordenadas por relevância. */
+export const SEARCH_PARAMETERS = {
+  since: "90d",
+  limit: 50,
+  mode: "ranked",
+} as const;
+
 export interface GorillaSearchAdapterOptions {
   apiKey?: string;
   fetchFn?: typeof fetch;
@@ -31,6 +42,7 @@ export class GorillaSearchAdapter implements SocialSearchProvider {
     return {
       search_id: status.search_id ?? searchId,
       status: status.status,
+      query,
       ...(status.total === undefined ? {} : { total: status.total }),
       results: status.results ?? [],
     };
@@ -42,9 +54,10 @@ export class GorillaSearchAdapter implements SocialSearchProvider {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": BROWSER_USER_AGENT,
         "x-api-key": apiKey,
       },
-      body: JSON.stringify({ query, since: "30d", limit: 5 }),
+      body: JSON.stringify({ query, ...SEARCH_PARAMETERS }),
     });
 
     if (!response.ok) {
@@ -64,7 +77,8 @@ export class GorillaSearchAdapter implements SocialSearchProvider {
   ): Promise<GorillaSearchStatusResponse> {
     const fetchFn = this.options.fetchFn ?? fetch;
     const intervalMs = this.options.pollIntervalMs ?? 2000;
-    const maxAttempts = this.options.maxPollAttempts ?? 30;
+    // Buscas grandes levam de 60 a 160 segundos: 90 consultas a cada 2 s cobrem 3 minutos.
+    const maxAttempts = this.options.maxPollAttempts ?? 90;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       if (intervalMs > 0) {
@@ -72,7 +86,7 @@ export class GorillaSearchAdapter implements SocialSearchProvider {
       }
 
       const response = await fetchFn(`${GORILLA_SEARCH_URL}?id=${searchId}`, {
-        headers: { "x-api-key": apiKey },
+        headers: { "User-Agent": BROWSER_USER_AGENT, "x-api-key": apiKey },
       });
 
       if (!response.ok) {
