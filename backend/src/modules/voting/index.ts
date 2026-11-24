@@ -3,6 +3,13 @@ export {
   InMemoryVotingRepository,
   type VotingRepository,
 } from "./voting.repository.js";
+export {
+  IC_PROPOSALS,
+  InMemoryProposalCatalog,
+  type ProposalCatalog,
+  type VotingProposal,
+  type VotingProposalSummary,
+} from "./voting.proposals.js";
 export { createVotingRouter, votingRouter } from "./voting.routes.js";
 export { parseCastVoteInput, type CastVoteInput } from "./voting.schema.js";
 export { DuplicateVoteError, VotingService } from "./voting.service.js";

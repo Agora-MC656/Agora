@@ -7,6 +7,7 @@ import { VotingService } from "./voting.service.js";
 export function createVotingRouter(controller: VotingController): Router {
   const router = Router();
 
+  router.get("/proposals", controller.listProposals);
   router.post("/proposals/:proposalId/votes", controller.castVote);
   router.get("/proposals/:proposalId/results", controller.getResult);
 
