@@ -64,4 +64,12 @@ describe("VotingService", () => {
       totalVotes: 0,
     });
   });
+
+  it("informa a opção escolhida pelo participante ou null se ainda não votou", () => {
+    service.castVote("orcamento-2026", { voterId: "ana", option: "nao" });
+
+    expect(service.findVoteOption("orcamento-2026", "ana")).toBe("nao");
+    expect(service.findVoteOption("orcamento-2026", "bruno")).toBeNull();
+    expect(service.findVoteOption("obras-2026", "ana")).toBeNull();
+  });
 });

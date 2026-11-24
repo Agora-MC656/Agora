@@ -210,4 +210,17 @@ describe("camada de API", () => {
     expect(fetchMock.mock.calls[3][0]).toContain("proposta%201");
     expect(fetchMock.mock.calls[4][0]).toContain("proposta%201");
   });
+
+  it("lista as pautas com ou sem o participante", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(mockResponse(200, []));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await votingApi.listProposals();
+    await votingApi.listProposals("maria@unicamp.br");
+
+    expect(fetchMock.mock.calls[0][0]).toBe("/voting/proposals");
+    expect(fetchMock.mock.calls[1][0]).toBe(
+      "/voting/proposals?voterId=maria%40unicamp.br",
+    );
+  });
 });
