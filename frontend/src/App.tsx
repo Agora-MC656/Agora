@@ -62,25 +62,6 @@ function HomePage() {
   );
 }
 
-function VotacaoPage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 3 - Pautas e Votação */}
-      <h1>Pautas e Votação</h1>
-      <p>Espaço reservado para pautas, registro e apuração de votos.</p>
-    </section>
-   );
-}
-function OrcamentoPage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 2 - Orçamento IC */}
-      <h1>Orçamento IC</h1>
-      <p>Espaço reservado para a consulta e visualização do orçamento do IC.</p>
-    </section>
-  );
-}
-
 function DebatePage() {
   return (
     <section className="placeholder-card">
