@@ -3,6 +3,8 @@ import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./useAuth";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import OrcamentoPage from "./pages/OrcamentoPage";
+import VotacaoPage from "./pages/VotacaoPage";
 
 function Layout() {
   const { user, logout } = useAuth();
@@ -41,26 +43,6 @@ function Layout() {
         </Routes>
       </main>
     </div>
-  );
-}
-
-function OrcamentoPage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 2 - Orçamento IC */}
-      <h1>Orçamento IC</h1>
-      <p>Espaço reservado para a consulta e visualização do orçamento do IC.</p>
-    </section>
-  );
-}
-
-function VotacaoPage() {
-  return (
-    <section className="placeholder-card">
-      {/* TODO: Integrante 3 - Pautas e Votação */}
-      <h1>Pautas e Votação</h1>
-      <p>Espaço reservado para pautas, registro e apuração de votos.</p>
-    </section>
   );
 }
 
