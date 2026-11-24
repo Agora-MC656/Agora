@@ -1,6 +1,11 @@
 import type { CastVoteInput } from "./voting.schema.js";
 import type { VotingRepository } from "./voting.repository.js";
-import { VOTE_OPTIONS, type Vote, type VotingResult } from "./voting.types.js";
+import {
+  VOTE_OPTIONS,
+  type Vote,
+  type VoteOption,
+  type VotingResult,
+} from "./voting.types.js";
 
 export class DuplicateVoteError extends Error {
   constructor(proposalId: string, voterId: string) {
@@ -27,6 +32,11 @@ export class VotingService {
     this.repository.save(vote);
 
     return vote;
+  }
+
+  /** Opção escolhida pelo participante na pauta, ou null se ainda não votou. */
+  findVoteOption(proposalId: string, voterId: string): VoteOption | null {
+    return this.repository.findVote(proposalId, voterId)?.option ?? null;
   }
 
   /** Apura a pauta. Uma pauta sem votos retorna todos os totais zerados. */
