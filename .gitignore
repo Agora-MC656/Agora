@@ -20,3 +20,7 @@ backend/certs/*
 backend/reports/
 frontend/reports/
 .stryker-tmp/
+
+# Contas criadas localmente pelo módulo de autenticação
+backend/users.json
+users.json
