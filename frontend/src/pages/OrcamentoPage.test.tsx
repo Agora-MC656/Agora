@@ -97,7 +97,7 @@ describe("OrcamentoPage", () => {
     expect(
       await screen.findByText(/Apoio direto a estudantes e eventos/),
     ).toBeInTheDocument();
-    expect(screen.getByText("(1 itens, 0% do total aprovado)")).toBeVisible();
+    expect(screen.getByText("(1 item, 0% do total aprovado)")).toBeVisible();
   });
 
   it("permite tirar a maior seção do gráfico para comparar as demais", async () => {

@@ -58,6 +58,9 @@ export default function OrcamentoPage() {
 
   return (
     <section className="page-card budget-page">
+      <p className="eyebrow">
+        <span className="accent">01 · Orçamento</span> · Instituto de Computação
+      </p>
       <h1>Orçamento IC</h1>
       <p className="page-lead">
         Previsão orçamentária de {BUDGET_YEAR} do Instituto de Computação,
@@ -125,7 +128,7 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
           <dt>Total estimado</dt>
           <dd>{formatCurrency(totals.estimatedCents)}</dd>
         </div>
-        <div className="stat">
+        <div className="stat hi">
           <dt>Total aprovado</dt>
           <dd>{formatCurrency(totals.approvedCents)}</dd>
         </div>
@@ -139,7 +142,12 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
         </div>
       </dl>
 
-      <h2>Como ler a proposta</h2>
+      <h2>
+        <span className="eyebrow" aria-hidden="true">
+          Guia rápido
+        </span>
+        Como ler a proposta
+      </h2>
       <ul className="reading-guide">
         <li>
           <strong>Estimativa</strong> é o valor previsto para o item, e{" "}
@@ -156,7 +164,12 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
         </li>
       </ul>
 
-      <h2>Distribuição por seção</h2>
+      <h2>
+        <span className="eyebrow" aria-hidden="true">
+          Gráfico
+        </span>
+        Distribuição por seção
+      </h2>
       <label className="inline-check">
         <input
           type="checkbox"
@@ -197,14 +210,23 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
         <span className="legend approved" /> Aprovado
       </p>
 
-      <h2>O que cada seção cobre</h2>
+      <h2>
+        <span className="eyebrow" aria-hidden="true">
+          Glossário
+        </span>
+        O que cada seção cobre
+      </h2>
       <dl className="section-guide">
-        {sections.map((summary) => (
+        {sections.map((summary, index) => (
           <div key={summary.section}>
             <dt>
+              <span className="guide-number" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               {summary.section}{" "}
               <span className="muted">
-                ({summary.itemCount} itens,{" "}
+                ({summary.itemCount}{" "}
+                {summary.itemCount === 1 ? "item" : "itens"},{" "}
                 {formatPercent(summary.approvedCents / totals.approvedCents)} do
                 total aprovado)
               </span>
@@ -217,7 +239,12 @@ function BudgetReport({ proposal }: { proposal: BudgetProposal }) {
         ))}
       </dl>
 
-      <h2>Itens da proposta</h2>
+      <h2>
+        <span className="eyebrow" aria-hidden="true">
+          Tabela completa
+        </span>
+        Itens da proposta
+      </h2>
       <div className="filters">
         <label>
           Seção
