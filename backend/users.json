@@ -6,5 +6,13 @@
     "age": 20,
     "gender": "other",
     "passwordHash": "$2b$10$zNkETxUqG6C9CWA7OdQ9rOyBO4RZswk2bwXN99siI/CUqE0chkNj."
+  },
+  {
+    "name": "Usuario Teste 1",
+    "email": "usuario1@mail.com",
+    "institution": "IC",
+    "age": 18,
+    "gender": "male",
+    "passwordHash": "$2b$10$huF0pjQur8nofxDwc36dVOoV5bW6nMLxDZMpBrePMSuz0kXyLvIqS"
   }
 ]

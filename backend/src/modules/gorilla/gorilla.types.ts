@@ -16,6 +16,8 @@ export interface SocialPost {
 export interface SocialSearchResults {
   search_id: string;
   status: string;
+  /** Termo pesquisado, quando conhecido. */
+  query?: string;
   total?: number;
   results: SocialPost[];
 }

@@ -10,7 +10,12 @@ const router = Router();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes",
+  handler: (_req, res) => {
+    res.status(429).json({
+      error:
+        "Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente.",
+    });
+  },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  BROWSER_USER_AGENT,
   GORILLA_SEARCH_URL,
   GorillaSearchAdapter,
 } from "./gorilla-search.adapter.js";
@@ -42,18 +43,28 @@ describe("GorillaSearchAdapter", () => {
       GORILLA_SEARCH_URL,
       expect.objectContaining({
         method: "POST",
-        headers: expect.objectContaining({ "x-api-key": "chave" }) as unknown,
-        body: JSON.stringify({ query: "orçamento", since: "30d", limit: 5 }),
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": BROWSER_USER_AGENT,
+          "x-api-key": "chave",
+        },
+        body: JSON.stringify({
+          query: "orçamento",
+          since: "90d",
+          limit: 50,
+          mode: "ranked",
+        }),
       }),
     );
     expect(fetchFn).toHaveBeenNthCalledWith(
       2,
       `${GORILLA_SEARCH_URL}?id=busca-1`,
-      { headers: { "x-api-key": "chave" } },
+      { headers: { "User-Agent": BROWSER_USER_AGENT, "x-api-key": "chave" } },
     );
     expect(result).toEqual({
       search_id: "busca-1",
       status: "completed",
+      query: "orçamento",
       total: 1,
       results: [{ id: "post-1", title: "Orçamento do IC" }],
     });
@@ -75,6 +86,7 @@ describe("GorillaSearchAdapter", () => {
     await expect(adapter.search("teste")).resolves.toEqual({
       search_id: "busca-2",
       status: "completed",
+      query: "teste",
       results: [],
     });
   });
@@ -138,5 +150,24 @@ describe("GorillaSearchAdapter", () => {
       "não terminou após 3 consultas de estado",
     );
     expect(fetchFn).toHaveBeenCalledTimes(4);
+  });
+
+  it("espera até 90 consultas de estado por padrão", async () => {
+    const fetchFn = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ search_id: "busca-5", status: "processing" }),
+      )
+      .mockResolvedValue(jsonResponse({ status: "processing" }));
+    const adapter = new GorillaSearchAdapter({
+      apiKey: "chave",
+      fetchFn,
+      pollIntervalMs: 0,
+    });
+
+    await expect(adapter.search("teste")).rejects.toThrow(
+      "não terminou após 90 consultas de estado",
+    );
+    expect(fetchFn).toHaveBeenCalledTimes(91);
   });
 });

@@ -8,7 +8,9 @@ describe("auth routes", () => {
     const response = await request(app).post("/auth/register").send({});
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "All fields are required" });
+    expect(response.body).toEqual({
+      error: "Todos os campos são obrigatórios",
+    });
   });
 
   it("accepts valid login through the app", async () => {
@@ -20,7 +22,7 @@ describe("auth routes", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       success: true,
-      message: "User logged in successfully",
+      message: "Usuário autenticado com sucesso",
     });
   });
 
@@ -33,7 +35,7 @@ describe("auth routes", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       success: false,
-      message: "Invalid password",
+      message: "Nome, e-mail ou senha incorretos",
     });
   });
 
@@ -46,7 +48,7 @@ describe("auth routes", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       success: false,
-      message: "User not found",
+      message: "Nome, e-mail ou senha incorretos",
     });
   });
 });

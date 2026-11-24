@@ -35,7 +35,9 @@ describe("POST /auth/register validation and controller flows", () => {
     const response = await request(app).post("/auth/register").send(body);
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "All fields are required" });
+    expect(response.body).toEqual({
+      error: "Todos os campos são obrigatórios",
+    });
   });
 
   it("rejects a negative age", async () => {
@@ -44,7 +46,9 @@ describe("POST /auth/register validation and controller flows", () => {
       .send({ ...validRegistration, age: -1 });
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "Age must be a positive number" });
+    expect(response.body).toEqual({
+      error: "A idade deve ser um número positivo",
+    });
   });
 
   it("rejects a password shorter than 6 characters", async () => {
@@ -54,7 +58,7 @@ describe("POST /auth/register validation and controller flows", () => {
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      error: "Password must be at least 6 characters long",
+      error: "A senha deve ter pelo menos 6 caracteres",
     });
   });
 
@@ -65,7 +69,7 @@ describe("POST /auth/register validation and controller flows", () => {
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      error: "Gender must be male, female, or other",
+      error: "O gênero deve ser masculino, feminino ou outro",
     });
   });
 
@@ -75,7 +79,7 @@ describe("POST /auth/register validation and controller flows", () => {
       .send({ ...validRegistration, email: "pessoa.unicamp.br" });
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "Invalid email format" });
+    expect(response.body).toEqual({ error: "Formato de e-mail inválido" });
   });
 
   it("returns 201 when valid registration passes middleware and succeeds in service", async () => {
@@ -89,7 +93,7 @@ describe("POST /auth/register validation and controller flows", () => {
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
       success: true,
-      message: "User registered successfully",
+      message: "Usuário cadastrado com sucesso",
     });
   });
 
@@ -111,14 +115,25 @@ describe("POST /auth/register validation and controller flows", () => {
       .post("/auth/register")
       .send(validRegistration);
 
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual({ error: "Failed to register user" });
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({
+      error: "Já existe uma conta com este nome",
+    });
   });
 });
 
 describe("POST /auth/login controller flows", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it("returns 400 when the login fields are missing", async () => {
+    const response = await request(app).post("/auth/login").send({});
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: "Informe o nome ou e-mail e a senha.",
+    });
   });
 
   it("returns 200 when login credentials are valid", async () => {
@@ -130,7 +145,7 @@ describe("POST /auth/login controller flows", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       success: true,
-      message: "User logged in successfully",
+      message: "Usuário autenticado com sucesso",
     });
   });
 
@@ -143,11 +158,11 @@ describe("POST /auth/login controller flows", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       success: false,
-      message: "User not found",
+      message: "Nome, e-mail ou senha incorretos",
     });
   });
 
-  it("returns 401 with Error message when loginUser throws an Error instance", async () => {
+  it("returns 500 when loginUser throws an unexpected Error", async () => {
     vi.spyOn(authService, "loginUser").mockRejectedValue(
       new Error("Unexpected auth failure"),
     );
@@ -157,11 +172,13 @@ describe("POST /auth/login controller flows", () => {
       passwordPlain: "password123",
     });
 
-    expect(response.status).toBe(401);
-    expect(response.body).toEqual({ error: "Unexpected auth failure" });
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({
+      error: "Não foi possível processar o login. Tente novamente.",
+    });
   });
 
-  it("returns 401 with default fallback message when loginUser throws a non-Error value", async () => {
+  it("returns 500 with a safe message when loginUser throws a non-Error value", async () => {
     vi.spyOn(authService, "loginUser").mockRejectedValue("string failure");
 
     const req = {
@@ -176,7 +193,29 @@ describe("POST /auth/login controller flows", () => {
 
     await handleLogin(req, res);
 
-    expect(status).toHaveBeenCalledWith(401);
-    expect(json).toHaveBeenCalledWith({ error: "Login failed" });
+    expect(status).toHaveBeenCalledWith(500);
+    expect(json).toHaveBeenCalledWith({
+      error: "Não foi possível processar o login. Tente novamente.",
+    });
+  });
+
+  it("returns 429 after repeated login attempts", async () => {
+    let response = await request(app).post("/auth/login").send({
+      name_email: "ghost@unicamp.br",
+      passwordPlain: "wrong",
+    });
+
+    for (let attempt = 0; attempt < 10 && response.status !== 429; attempt++) {
+      response = await request(app).post("/auth/login").send({
+        name_email: "ghost@unicamp.br",
+        passwordPlain: "wrong",
+      });
+    }
+
+    expect(response.status).toBe(429);
+    expect(response.body).toEqual({
+      error:
+        "Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente.",
+    });
   });
 });

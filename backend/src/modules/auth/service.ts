@@ -4,6 +4,9 @@ import path from "path";
 import { UserRegistration, LoginCredentials, UserSaved } from "./types.js";
 import { validateRegistration } from "./validation.js";
 
+export class DuplicateNameError extends Error {}
+export class DuplicateEmailError extends Error {}
+
 // Path to the JSON file that will act as a simple database
 const DB_FILE_PATH = path.resolve("users.json");
 
@@ -58,11 +61,14 @@ export const registerUser = async (userData: UserRegistration) => {
 
   const usersDB = await readUsersFromFile(); // Reads the current users from the JSON file
 
-  const existingUser = usersDB.find(
-    (user) => user.name === userData.name || user.email === userData.email,
-  );
-  if (existingUser) {
-    throw new Error("User with this name or email already exists");
+  const existingName = usersDB.find((user) => user.name === userData.name);
+  if (existingName) {
+    throw new DuplicateNameError("Já existe uma conta com este nome");
+  }
+
+  const existingEmail = usersDB.find((user) => user.email === userData.email);
+  if (existingEmail) {
+    throw new DuplicateEmailError("Já existe uma conta com este e-mail");
   }
 
   const saltRounds = 10;
@@ -80,11 +86,12 @@ export const registerUser = async (userData: UserRegistration) => {
   usersDB.push(newUser);
   await saveDB(usersDB); // Save the updated users to the JSON file
 
-  return { success: true, message: "User registered successfully" };
+  return { success: true, message: "Usuário cadastrado com sucesso" };
 };
 
 export const loginUser = async (credentials: LoginCredentials) => {
   const usersDB = await readUsersFromFile(); // Reads the current users from the JSON file
+  const invalidCredentialsMessage = "Nome, e-mail ou senha incorretos";
 
   // Try to find the user by name or email
   const user = usersDB.find(
@@ -93,7 +100,7 @@ export const loginUser = async (credentials: LoginCredentials) => {
       user.email === credentials.name_email,
   );
   if (!user) {
-    return { success: false, message: "User not found" };
+    return { success: false, message: invalidCredentialsMessage };
   }
 
   // Check if the provided password matches the stored hashed password
@@ -102,8 +109,8 @@ export const loginUser = async (credentials: LoginCredentials) => {
     user.passwordHash,
   );
   if (!isMatch) {
-    return { success: false, message: "Invalid password" };
+    return { success: false, message: invalidCredentialsMessage };
   }
 
-  return { success: true, message: "User logged in successfully" };
+  return { success: true, message: "Usuário autenticado com sucesso" };
 };
