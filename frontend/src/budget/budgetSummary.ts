@@ -70,6 +70,7 @@ function normalize(text: string): string {
   return text
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
+    .replace(/-/g, "")
     .toLocaleLowerCase("pt-BR");
 }
 
@@ -78,22 +79,24 @@ export type ItemFilter = {
   query: string;
 };
 
-/** Filtra por seção (vazio = todas) e por texto na descrição ou subseção. */
+/**
+ * Filtra por seção (vazio = todas) e por texto na descrição ou subseção.
+ * Cada palavra da busca precisa aparecer, ignorando acentos e hífens.
+ */
 export function filterItems(
   items: readonly BudgetProposalItem[],
   { section, query }: ItemFilter,
 ): BudgetProposalItem[] {
-  const terms = normalize(query.trim());
+  const terms = normalize(query).split(/\s+/).filter(Boolean);
   return items.filter((item) => {
     if (section && item.section !== section) {
       return false;
     }
-    if (!terms) {
+    if (terms.length === 0) {
       return true;
     }
-    return normalize(`${item.description} ${item.subsection ?? ""}`).includes(
-      terms,
-    );
+    const text = normalize(`${item.description} ${item.subsection ?? ""}`);
+    return terms.every((term) => text.includes(term));
   });
 }
 

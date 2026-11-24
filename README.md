@@ -133,7 +133,7 @@ npm run dev --workspace frontend
 1. Abra http://localhost:5173 e crie uma conta em **Entrar › Cadastrar**. Depois, faça login.
 2. Em **Orçamento**, aguarde a primeira extração (alguns segundos) e explore o gráfico, as explicações e a busca de itens.
 3. Em **Votação**, escolha Sim ou Não em uma pauta, confirme e veja a apuração.
-4. Em **Debate**, filtre as publicações por palavra-chave ou fonte.
+4. Em **Debate**, filtre as publicações por palavra-chave ou fonte. Com `GORILLA_API_KEY` configurada, use **Nova busca no Gorilla** com um termo curto, como “greve Unicamp”.
 
 Os dados de votação e o cache do orçamento ficam em memória e são perdidos ao reiniciar o backend. As contas ficam em `backend/users.json`, que não é versionado.
 
@@ -149,7 +149,7 @@ Os dados de votação e o cache do orçamento ficam em memória e são perdidos 
 | `npm run format:check`                       | Verifica a formatação com Prettier (`npm run format` corrige).                 |
 | `npm run build`                              | Compila o backend (TypeScript) e gera o build do frontend.                     |
 
-O workflow de CI (`.github/workflows/ci.yml`) roda em todo PR e push para `develop` e `main`. Ele verifica formatação, lint, build e testes com cobertura, e envia a análise ao SonarQube Cloud.
+O workflow de CI (`.github/workflows/ci.yml`) roda em todo PR e push para `develop` e `main`. Ele verifica formatação, lint, build e testes do backend e do frontend com cobertura, e publica os relatórios de cobertura como artefato da execução.
 
 ## API do backend
 

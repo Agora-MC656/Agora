@@ -157,6 +157,25 @@ describe("filterItems", () => {
       filterItems(items, { section: "Adiantamento", query: "servidores" }),
     ).toEqual([]);
   });
+
+  it("ignora hífens na busca", () => {
+    expect(
+      filterItems(items, { section: "", query: "wi-fi" }).map(
+        ({ description }) => description,
+      ),
+    ).toEqual(["Wifi IC1 e IC2"]);
+  });
+
+  it("exige todas as palavras da busca, em qualquer ordem", () => {
+    expect(
+      filterItems(items, { section: "", query: "ic2 wifi" }).map(
+        ({ description }) => description,
+      ),
+    ).toEqual(["Wifi IC1 e IC2"]);
+    expect(
+      filterItems(items, { section: "", query: "wifi olimpiada" }),
+    ).toEqual([]);
+  });
 });
 
 describe("SECTION_GUIDE", () => {

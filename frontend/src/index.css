@@ -127,6 +127,13 @@ textarea {
   margin: 0 auto;
 }
 
+.auth-card h1 {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .auth-tabs {
   display: flex;
   gap: 0.5rem;
