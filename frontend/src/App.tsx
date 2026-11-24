@@ -1,6 +1,7 @@
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./useAuth";
+import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
 import VotacaoPage from "./pages/VotacaoPage";
@@ -42,23 +43,6 @@ function Layout() {
         </Routes>
       </main>
     </div>
-  );
-}
-
-function HomePage() {
-  return (
-    <section className="page-card">
-      <h1>Ágora — participação acadêmica no IC/UNICAMP</h1>
-      <p>
-        O Ágora aproxima a comunidade do Instituto de Computação para acompanhar
-        o orçamento, participar de pautas e compartilhar opiniões públicas.
-      </p>
-      <div className="home-actions">
-        <NavLink to="/orcamento">Consultar orçamento IC</NavLink>
-        <NavLink to="/votacao">Acompanhar pautas e votar</NavLink>
-        <NavLink to="/debate">Explorar opinião pública</NavLink>
-      </div>
-    </section>
   );
 }
 
