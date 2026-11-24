@@ -1,0 +1,82 @@
+.home-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.home-page h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.home-page h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.home-page p {
+  color: #344054;
+}
+
+.home-page .eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1746a2;
+  text-transform: uppercase;
+}
+
+.home-page .lead {
+  font-size: 1.05rem;
+}
+
+.home-page .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.home-page .feature-card {
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid #d8e1ef;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.home-page .feature-card:hover {
+  border-color: #1746a2;
+  background: #f8faff;
+}
+
+.home-page .feature-card strong {
+  color: #1746a2;
+}
+
+.home-page .feature-card span {
+  font-size: 0.9rem;
+  color: #465268;
+}
+
+.home-page .steps {
+  display: grid;
+  gap: 0.75rem;
+  padding-left: 1.4rem;
+  list-style: decimal;
+  color: #344054;
+}
+
+.home-page .sources {
+  font-size: 0.9rem;
+}
+
+.home-page .sources a {
+  color: #1746a2;
+  text-decoration: underline;
+}
