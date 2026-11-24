@@ -90,6 +90,9 @@ export default function DebatePage() {
 
   return (
     <section className="page-card debate-page">
+      <p className="eyebrow">
+        <span className="accent">03 · Debate</span> · Redes sociais via Gorilla
+      </p>
       <h1>Opinião Pública</h1>
       <p className="page-lead">
         Manifestações públicas em redes sociais coletadas pelo Gorilla, um

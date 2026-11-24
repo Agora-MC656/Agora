@@ -13,8 +13,12 @@ function Layout() {
   return (
     <div className="app-shell">
       <nav className="navbar" aria-label="Navegacao principal">
-        <NavLink className="brand" to="/">
-          Ágora — IC/UNICAMP
+        <NavLink className="brand" to="/" aria-label="Ágora, página inicial">
+          <span className="brand-mark" aria-hidden="true" />
+          Ágora
+          <span className="brand-context" aria-hidden="true">
+            IC · Unicamp
+          </span>
         </NavLink>
         <div className="nav-links">
           <NavLink to="/">Início</NavLink>
@@ -43,6 +47,10 @@ function Layout() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <footer className="site-footer">
+        <span>Ágora · Instituto de Computação · Unicamp</span>
+        <span>MC656 · Engenharia de Software · 2026</span>
+      </footer>
     </div>
   );
 }
