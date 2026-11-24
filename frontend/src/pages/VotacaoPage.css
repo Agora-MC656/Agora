@@ -1,0 +1,154 @@
+.voting-page h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.voting-page .page-lead {
+  color: #465268;
+}
+
+.voting-page .rules {
+  margin-top: 1.25rem;
+  border: 1px solid #dde4ef;
+  border-radius: 0.75rem;
+  background: #f8faff;
+  padding: 1rem 1.25rem;
+}
+
+.voting-page .rules h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.voting-page .rules ul {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style: disc;
+  color: #344054;
+}
+
+.voting-page .feedback a {
+  color: #1746a2;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.voting-page .feedback button {
+  margin-top: 0.75rem;
+}
+
+.voting-page .proposal-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.voting-page .proposal-card {
+  border: 1px solid #dde4ef;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.voting-page .proposal-card h2 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.voting-page .proposal-card > p {
+  margin: 0 0 0.75rem;
+  color: #344054;
+}
+
+.voting-page .budget-reference {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1746a2;
+  text-transform: uppercase;
+}
+
+.voting-page .result {
+  display: grid;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.voting-page .result-total {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #667085;
+}
+
+.voting-page .result-row {
+  display: grid;
+  grid-template-columns: 3rem 1fr 6rem;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.voting-page .result-label {
+  font-weight: 700;
+}
+
+.voting-page .result-track {
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #eef2f8;
+  overflow: hidden;
+}
+
+.voting-page .result-bar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.voting-page .result-bar.sim {
+  background: #1d7041;
+}
+
+.voting-page .result-bar.nao {
+  background: #a12828;
+}
+
+.voting-page .result-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #465268;
+}
+
+.voting-page .vote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.voting-page .secondary-button {
+  border: 1px solid #1746a2;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  color: #1746a2;
+  padding: 0.65rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.voting-page .secondary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.voting-page .confirm-box {
+  border-radius: 0.55rem;
+  background: #edf3ff;
+  padding: 0.9rem;
+}
+
+.voting-page .confirm-box p {
+  margin: 0 0 0.75rem;
+}

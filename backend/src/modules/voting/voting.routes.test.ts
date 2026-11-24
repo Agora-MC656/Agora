@@ -4,6 +4,10 @@ import type { AddressInfo } from "node:net";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { VotingController } from "./voting.controller.js";
+import {
+  InMemoryProposalCatalog,
+  type VotingProposalSummary,
+} from "./voting.proposals.js";
 import { InMemoryVotingRepository } from "./voting.repository.js";
 import { createVotingRouter } from "./voting.routes.js";
 import { VotingService } from "./voting.service.js";
@@ -15,6 +19,20 @@ let baseUrl: string;
 beforeEach(async () => {
   const controller = new VotingController(
     new VotingService(new InMemoryVotingRepository()),
+    new InMemoryProposalCatalog([
+      {
+        id: "orcamento-2026",
+        title: "Orçamento 2026",
+        description: "Você aprova a proposta?",
+        budgetReference: "Informática",
+      },
+      {
+        id: "obras-2026",
+        title: "Obras 2026",
+        description: "Você aprova as obras?",
+        budgetReference: "Obras",
+      },
+    ]),
   );
   const app = express();
   app.use(express.json());
@@ -86,5 +104,50 @@ describe("rotas de votacao", () => {
       totals: { sim: 1, nao: 1 },
       totalVotes: 2,
     });
+  });
+
+  it("responde 404 ao votar em uma pauta inexistente", async () => {
+    const response = await castVote("pauta-inexistente", {
+      voterId: "ana",
+      option: "sim",
+    });
+
+    expect(response.status).toBe(404);
+    expect(await response.json()).toEqual({ error: "Pauta não encontrada." });
+  });
+
+  it("responde 404 ao apurar uma pauta inexistente", async () => {
+    const response = await fetch(
+      `${baseUrl}/proposals/pauta-inexistente/results`,
+    );
+
+    expect(response.status).toBe(404);
+  });
+
+  it("lista as pautas com a apuração atual", async () => {
+    await castVote("orcamento-2026", { voterId: "ana", option: "sim" });
+
+    const response = await fetch(`${baseUrl}/proposals`);
+    const proposals = (await response.json()) as VotingProposalSummary[];
+
+    expect(response.status).toBe(200);
+    expect(proposals.map(({ id }) => id)).toEqual([
+      "orcamento-2026",
+      "obras-2026",
+    ]);
+    expect(proposals[0]).toMatchObject({
+      title: "Orçamento 2026",
+      result: { totals: { sim: 1, nao: 0 }, totalVotes: 1 },
+      myVote: null,
+    });
+  });
+
+  it("inclui o voto do participante informado em cada pauta", async () => {
+    await castVote("obras-2026", { voterId: "ana", option: "nao" });
+
+    const response = await fetch(`${baseUrl}/proposals?voterId=%20ana%20`);
+    const proposals = (await response.json()) as VotingProposalSummary[];
+
+    expect(proposals.map(({ myVote }) => myVote)).toEqual([null, "nao"]);
   });
 });

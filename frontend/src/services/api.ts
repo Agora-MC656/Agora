@@ -76,6 +76,15 @@ export type VotingResult = {
   totalVotes: number;
 };
 
+export type VotingProposalSummary = {
+  id: string;
+  title: string;
+  description: string;
+  budgetReference: string;
+  result: VotingResult;
+  myVote: VoteOption | null;
+};
+
 const API_BASE_URL =
   (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ??
   "";
@@ -179,6 +188,12 @@ export function generateAgenda(context: string) {
 }
 
 export const votingApi = {
+  listProposals: (voterId?: string) =>
+    request<VotingProposalSummary[]>(
+      voterId
+        ? `/voting/proposals?voterId=${encodeURIComponent(voterId)}`
+        : "/voting/proposals",
+    ),
   castVote: (proposalId: string, voterId: string, option: VoteOption) =>
     request<Vote>(`/voting/proposals/${encodeURIComponent(proposalId)}/votes`, {
       method: "POST",
